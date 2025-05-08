@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+body, #root{
+    background-color: #f3f4f6;
+    color: #1e1e1e;
+}
+
+@theme {
+    --color-custom-green: #80cc28;
+    --color-custom-blue: #3871c1;
+
+    --breakpoint-mobile: {max: 480px};
+    --breakpoint-tablet: {min: 481px, max: 1023px};
+}
