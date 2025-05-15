@@ -5,9 +5,23 @@ body, #root{
     color: #1e1e1e;
 }
 
+.hero{
+    background-image: url("./assets/hero-image.jpg");
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+
+    /* .inner-hero{
+        background: linear-gradient(to right, 
+      #244331 0%, 
+      #244331 80%, 
+      transparent 80%, 
+      transparent 100%);
+    } */
+}
+
 @theme {
-    --color-custom-green: #80cc28;
-    --color-custom-blue: #3871c1;
+    --color-custom-green: #244331;
 
     --breakpoint-mobile: {max: 480px};
     --breakpoint-tablet: {min: 481px, max: 1023px};

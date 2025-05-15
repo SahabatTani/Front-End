@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import logoCircle from "../assets/logo-circle.png"
+import logo from "../assets/logo.png"
 
 export default function Navbar(){
 
@@ -11,25 +11,21 @@ export default function Navbar(){
         {
             label: "Fitur",
             path: "/#features"
-        },
-        {
-            label: "Cara Kerja",
-            path: "/#how-it-works"
         }
     ]
 
     return (
-        <nav className="bg-white px-[10vw] py-4 flex items-center justify-between border border-b border-[#ccc]">
+        <nav className="bg-white px-[10vw] py-4 flex items-center justify-between border border-b border-[#ccc] fixed top-0 left-0 w-full">
             <Link to={"/"} className="logo">
-                <img src={logoCircle} alt="SahabatTani" className="w-16 h-16" />
+                <img src={logo} alt="SahabatTani" className="w-12 h-12" />
             </Link>
             <div className="flex items-center gap-8">
             {
                 links.map((link, index) => (
-                    <Link to={link.path} key={index} className="hover:underline">{link.label}</Link>
+                    <a href={link.path} key={index} className="hover:underline">{link.label}</a>
                 ))
             }
-                <Link to={"/login"} className="py-2 px-6 rounded-full bg-custom-green">Masuk</Link>
+                <Link to={"/login"} className="py-2 px-6 rounded-full bg-custom-green text-white">Masuk</Link>
             </div>
         </nav>
     )

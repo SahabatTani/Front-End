@@ -22,7 +22,7 @@ export default function Forum(){
 
 function ForumContainer({ onOpenModal }){
     return (
-        <section className="forum-container flex gap-4 m-auto w-[80vw] mt-4">
+        <section className="forum-container flex gap-4 m-auto w-[80vw] mt-24">
             <article className="flex h-fit items-center gap-2 p-2 rounded-full bg-white border border-[#ccc] focus-within:border-transparent focus-within:outline-2 focus-within:outline-custom-green">
                 <IconSearch stroke={1.5} />
                 <input type="search" placeholder="Cari" className="outline-none" />
@@ -88,7 +88,7 @@ function NewDiscussionModal({ onClose }) {
                     <textarea placeholder="Isi diskusi" className="border-b border-[#ccc] p-2 rounded h-40 resize-none outline-none" />
                     <div className="flex justify-end gap-2 p-2">
                         <button type="button" onClick={onClose} className="py-2 px-6 rounded-full bg-[#ff3d3d] cursor-pointer text-white">Batal</button>
-                        <button type="submit" className="py-2 px-6 rounded-full bg-custom-green cursor-pointer">Kirim</button>
+                        <button type="submit" className="py-2 px-6 rounded-full bg-custom-green cursor-pointer text-white">Kirim</button>
                     </div>
                 </form>
             </div>
