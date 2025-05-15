@@ -1,5 +1,5 @@
 import { IconBrandInstagram, IconMail } from "@tabler/icons-react"
-import logo from "../assets/logo.png"
+import logoWhite from "../assets/logo-white.png"
 import { Link } from "react-router-dom"
 
 export default function Footer(){
@@ -18,7 +18,7 @@ export default function Footer(){
     return (
         <footer className="flex flex-col px-[10vw] py-8 mt-8 bg-custom-green text-white">
             <article className="flex justify-between">
-                <img src={logo} alt="SahabatTani" className="w-12 h-12" />
+                <img src={logoWhite} alt="SahabatTani" className="w-12 h-12" />
                 <div className="flex gap-4">
                 {contacts.map((contact, index) => (
                     <Link className="flex" key={index}>

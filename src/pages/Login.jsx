@@ -1,4 +1,4 @@
-import logo from "../assets/logo.png"
+import logoGreen from "../assets/logo-green.png"
 
 export default function Login(){
 
@@ -15,7 +15,7 @@ export default function Login(){
     return (
         <section className="login flex items-center justify-center w-screen h-screen">
             <form className="bg-white border-b-8 border-custom-green rounded-3xl shadow-lg p-8 flex flex-col items-center gap-8" onSubmit={loginHandler}>
-                <img src={logo} alt="SahabatTani" className="w-16 h-16" />
+                <img src={logoGreen} alt="SahabatTani" className="w-16 h-16" />
                 <div className="text-2xl font-bold">Masuk ke SahabatTani</div>
                 <div className="flex flex-col gap-4 w-full">
                     <div className="flex flex-col w-full">
