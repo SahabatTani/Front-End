@@ -3,6 +3,12 @@ import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 import aboutImage from "../assets/about-image.jpg"
 import { IconClipboard, IconMap, IconSearch, IconUsers } from "@tabler/icons-react"
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
 export default function Home(){
     return (
@@ -11,6 +17,7 @@ export default function Home(){
         <Hero />
         <About />
         <Features />
+        <UserMap />
         <Footer />
         </>
     )
@@ -87,4 +94,45 @@ function Features(){
             </article>
         </section>
     )
+}
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: markerIcon2x,
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow,
+});
+
+function UserMap() {
+    const posts = [
+        {
+            id: 1,
+            username: 'alice',
+            content: 'Halo dari Jakarta!',
+            location: { lat: -6.2, lng: 106.8 },
+        },
+        {
+            id: 2,
+            username: 'bob',
+            content: 'Posting dari Bandung!',
+            location: { lat: -6.9, lng: 107.6 },
+        },
+    ];
+    return (
+        <section className="map px-[10vw] flex flex-col py-12 gap-8">
+            <p className="text-2xl"><span className="font-bold">Peta</span> persebaran</p>
+            <MapContainer center={[-7.7956, 110.3695]} zoom={10} style={{ height: '500px', width: '100%' }}>
+                <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+                {posts.map(post => (
+                    <Marker key={post.id} position={[post.location.lat, post.location.lng]}>
+                        <Popup>
+                            <strong>{post.username}</strong><br />
+                            {post.content}
+                        </Popup>
+                    </Marker>
+                ))}
+            </MapContainer>
+            <article></article>
+        </section>
+    );
 }

@@ -15,7 +15,7 @@ export default function Navbar(){
     ]
 
     return (
-        <nav className="bg-white px-[10vw] py-4 flex items-center justify-between border border-b border-[#ccc] fixed top-0 left-0 w-full">
+        <nav className="bg-white px-[10vw] py-4 flex items-center justify-between border border-b border-[#ccc] fixed top-0 left-0 w-full z-[9999]">
             <Link to={"/"} className="logo">
                 <img src={logo} alt="SahabatTani" className="w-12 h-12" />
             </Link>

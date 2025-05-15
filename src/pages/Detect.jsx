@@ -1,4 +1,4 @@
-import { IconArrowNarrowRight, IconClipboard, IconObjectScan, IconPhoto, IconPhotoUp } from "@tabler/icons-react";
+import { IconArrowNarrowRight, IconCheck, IconCircleCheck, IconClipboard, IconObjectScan, IconPhoto, IconPhotoUp } from "@tabler/icons-react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import React, { useState } from "react";
@@ -63,6 +63,10 @@ function DetectContainer(){
             setImage(previewUrl)
         }
     }
+    const clearImageInput = () => {
+        setImage(null)
+        setSelectedPlant("")
+    }
     const imageInputs = [
         {
             img: rice,
@@ -77,17 +81,37 @@ function DetectContainer(){
             name: "Singkong"
         }
     ]
+    const detectHandler = async() => {
+        try {
+            navigator.geolocation.getCurrentPosition(
+                async(position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    console.log(lat, lng)
+                }, (error) => {
+                    console.error('Gagal mendapatkan lokasi:', error);
+                    alert('Gagal mendapatkan lokasi');
+                }
+            );
+        } catch(error){
+            console.log(error)
+        }
+    }
 
     return (
         <section className="flex flex-col gap-8 items-center mt-8 mx-auto px-[10vw] bg-custom-green py-8 justify-center">
             <section className="image-inputs flex items-center gap-4">
             {imageInputs.map((item, index) => (
-                <label key={index} className="flex flex-col items-center justify-center p-2 rounded-lg bg-white shadow-lg cursor-pointer min-w-32 min-h-32" onClick={() => setSelectedPlant(item.name)}>
+                <label key={index} className="flex flex-col items-center justify-center p-2 rounded-lg bg-white shadow-lg cursor-pointer min-w-32 min-h-32 relative" onClick={() => setSelectedPlant(item.name)}>
                     <img src={item.img} alt={item.name} className="w-12 h-12" />
                     <input type="file" hidden onChange={imageInputHandler} />
                     <span className="font-bold text-sm flex items-center gap-1">
                         <IconPhotoUp stroke={1.5} /><p>{item.name}</p>
                     </span>
+                    <div className={`absolute top-0 right-0 text-custom-green ${selectedPlant === item.name ? "" : "hidden"}`}>
+                        <IconCircleCheck stroke={1.5} />
+                    </div>
                 </label>
             ))}
             </section>
@@ -96,8 +120,8 @@ function DetectContainer(){
                     <article className="flex flex-col rounded-lg overflow-hidden gap-1">
                         <img src={image} alt="Preview" className="max-w-full max-h-full object-contain" />
                         <div className="flex justify-end gap-2 p-2 bg-white">
-                            <button type="button" onClick={() => setImage(null)} className="py-2 px-6 rounded-full bg-[#ff3d3d] cursor-pointer text-white">Hapus</button>
-                            <button type="submit" className="py-2 px-6 rounded-full bg-custom-green cursor-pointer text-white">Deteksi</button>
+                            <button type="button" onClick={clearImageInput} className="py-2 px-6 rounded-full bg-[#ff3d3d] cursor-pointer text-white">Hapus</button>
+                            <button type="submit" onClick={detectHandler} className="py-2 px-6 rounded-full bg-custom-green cursor-pointer text-white">Deteksi</button>
                         </div>
                     </article>
                 ) : (

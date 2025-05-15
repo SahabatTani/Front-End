@@ -10,14 +10,6 @@ body, #root{
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
-
-    /* .inner-hero{
-        background: linear-gradient(to right, 
-      #244331 0%, 
-      #244331 80%, 
-      transparent 80%, 
-      transparent 100%);
-    } */
 }
 
 @theme {

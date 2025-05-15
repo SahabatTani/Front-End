@@ -16,7 +16,7 @@ export default function Footer(){
     ]
 
     return (
-        <footer className="flex flex-col px-[10vw] py-8">
+        <footer className="flex flex-col px-[10vw] py-8 mt-8 bg-custom-green text-white">
             <article className="flex justify-between">
                 <img src={logo} alt="SahabatTani" className="w-12 h-12" />
                 <div className="flex gap-4">
