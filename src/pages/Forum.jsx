@@ -28,12 +28,12 @@ function ForumContainer({ onOpenModal }){
                 <input type="search" placeholder="Cari" className="outline-none" />
             </article>
             <article className="flex flex-col gap-4">
-                <button type="button" className="flex items-center gap-2 p-2 border border-[#ccc] rounded-full bg-white cursor-pointer" onClick={onOpenModal}>
+                <button type="button" className="flex items-center gap-2 p-2 border border-[#ccc] rounded-full bg-white" onClick={onOpenModal}>
                     <IconUserCircle />
                     <p>Buat diskusi baru</p>
                 </button>
                 <section className="flex flex-col border border-[#ccc] rounded-lg bg-white">
-                    <Link to={"/forum/"} className="flex p-2 gap-2 border-b border-[#ccc]">
+                    <Link to={"/forum/threadId"} className="flex p-2 gap-2 border-b border-[#ccc]">
                         <div className="flex w-fit">
                             <IconUserCircle />
                         </div>
@@ -46,7 +46,7 @@ function ForumContainer({ onOpenModal }){
                             <p>4</p>
                         </div>
                     </Link>
-                    <Link to={"/forum/"} className="flex p-2 gap-2 border-b border-[#ccc]">
+                    <Link to={"/forum/threadId"} className="flex p-2 gap-2 border-b border-[#ccc]">
                         <div className="flex w-fit">
                             <IconUserCircle />
                         </div>
@@ -59,7 +59,7 @@ function ForumContainer({ onOpenModal }){
                             <p>7</p>
                         </div>
                     </Link>
-                    <Link to={"/forum/"} className="flex p-2 gap-2">
+                    <Link to={"/forum/threadId"} className="flex p-2 gap-2">
                         <div className="flex w-fit">
                             <IconUserCircle />
                         </div>
@@ -87,8 +87,8 @@ function NewDiscussionModal({ onClose }) {
                     <input type="text" placeholder="Judul diskusi" className="border-t border-b border-[#ccc] p-2 outline-none" />
                     <textarea placeholder="Isi diskusi" className="border-b border-[#ccc] p-2 rounded h-40 resize-none outline-none" />
                     <div className="flex justify-end gap-2 p-2">
-                        <button type="button" onClick={onClose} className="py-2 px-6 rounded-full bg-[#ff3d3d] cursor-pointer text-white">Batal</button>
-                        <button type="submit" className="py-2 px-6 rounded-full bg-custom-green cursor-pointer text-white">Kirim</button>
+                        <button type="button" onClick={onClose} className="py-2 px-6 rounded-full bg-[#ff3d3d] text-white">Batal</button>
+                        <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white">Kirim</button>
                     </div>
                 </form>
             </div>

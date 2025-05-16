@@ -5,6 +5,10 @@ body, #root{
     color: #1e1e1e;
 }
 
+button{
+    cursor: pointer;
+}
+
 .hero{
     background-image: url("./assets/hero-image.jpg");
     background-position: center;
@@ -14,7 +18,7 @@ body, #root{
 
 @theme {
     --color-custom-green: #244331;
-
-    --breakpoint-mobile: {max: 480px};
-    --breakpoint-tablet: {min: 481px, max: 1023px};
 }
+
+@custom-variant mobile (@media (max-width: 480px));
+@custom-variant tablet (@media (min-width: 481px) and (max-width: 1023px));

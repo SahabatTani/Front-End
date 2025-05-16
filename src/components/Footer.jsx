@@ -3,7 +3,6 @@ import logoWhite from "../assets/logo-white.png"
 import { Link } from "react-router-dom"
 
 export default function Footer(){
-
     const contacts = [
         {
             svg: <IconBrandInstagram stroke={1.5} />,

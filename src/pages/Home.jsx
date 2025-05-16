@@ -56,7 +56,6 @@ function About(){
 }
 
 function Features(){
-
     const features = [
         {
             svg: <IconSearch stroke={1.5} className="w-full h-full" />,

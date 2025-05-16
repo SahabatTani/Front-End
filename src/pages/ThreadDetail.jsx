@@ -13,7 +13,6 @@ export default function ThreadDetail(){
 }
 
 function ThreadContainer(){
-
     const comments = [
         {
             user: "Umar",
@@ -26,6 +25,16 @@ function ThreadContainer(){
             content: "lorem ipsum dolor sit amet"
         }
     ]
+
+    const postCommentHandler = async(event) => {
+        event.preventDefault()
+
+        try {
+            const token = localStorage.getItem("token")
+        } catch(error){
+            console.log(error)
+        }
+    }
 
     return (
         <section className="flex flex-col px-[10vw] mt-24 mx-auto gap-2">
@@ -60,9 +69,9 @@ function ThreadContainer(){
                     ))}
                     </article>
                 </article>
-                <form className="create-comment flex flex-col gap-2 rounded-lg bg-white shadow-lg">
+                <form className="create-comment flex flex-col gap-2 rounded-lg bg-white shadow-lg" onSubmit={postCommentHandler}>
                     <textarea placeholder="Isi komentar" rows={7} className="p-2 outline-none border-b border-[#ccc] resize-none"></textarea>
-                    <button type="submit" className="py-2 px-6 mb-2 mr-2 rounded-full bg-custom-green text-white self-end w-fit cursor-pointer">Kirim</button>
+                    <button type="submit" className="py-2 px-6 mb-2 mr-2 rounded-full bg-custom-green text-white self-end w-fit">Kirim</button>
                 </form>
             </article>
         </section>

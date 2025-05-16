@@ -18,7 +18,6 @@ export default function Detect(){
 }
 
 function DetectSteps(){
-
     const steps = [
         {
             svg: <IconPhoto stroke={1.5} />,
@@ -53,13 +52,13 @@ function DetectSteps(){
 }
 
 function DetectContainer(){
-
     const [selectedPlant, setSelectedPlant] = useState("")
     const [image, setImage] = useState(null)
-    const imageInputHandler = (event) => {
+    const imageInputHandler = (event, plant) => {
         const file = event.target.files[0]
         if (file) {
             const previewUrl = URL.createObjectURL(file)
+            setSelectedPlant(plant)
             setImage(previewUrl)
         }
     }
@@ -103,9 +102,9 @@ function DetectContainer(){
         <section className="flex flex-col gap-8 items-center mt-8 mx-auto px-[10vw] bg-custom-green py-8 justify-center">
             <section className="image-inputs flex items-center gap-4">
             {imageInputs.map((item, index) => (
-                <label key={index} className="flex flex-col items-center justify-center p-2 rounded-lg bg-white shadow-lg cursor-pointer min-w-32 min-h-32 relative" onClick={() => setSelectedPlant(item.name)}>
+                <label key={index} className="flex flex-col items-center justify-center p-2 rounded-lg bg-white shadow-lg cursor-pointer min-w-32 min-h-32 relative">
                     <img src={item.img} alt={item.name} className="w-12 h-12" />
-                    <input type="file" hidden onChange={imageInputHandler} />
+                    <input type="file" hidden onChange={(event) => imageInputHandler(event, item.name)} />
                     <span className="font-bold text-sm flex items-center gap-1">
                         <IconPhotoUp stroke={1.5} /><p>{item.name}</p>
                     </span>
@@ -120,8 +119,8 @@ function DetectContainer(){
                     <article className="flex flex-col rounded-lg overflow-hidden gap-1">
                         <img src={image} alt="Preview" className="max-w-full max-h-full object-contain" />
                         <div className="flex justify-end gap-2 p-2 bg-white">
-                            <button type="button" onClick={clearImageInput} className="py-2 px-6 rounded-full bg-[#ff3d3d] cursor-pointer text-white">Hapus</button>
-                            <button type="submit" onClick={detectHandler} className="py-2 px-6 rounded-full bg-custom-green cursor-pointer text-white">Deteksi</button>
+                            <button type="button" onClick={clearImageInput} className="py-2 px-6 rounded-full bg-[#ff3d3d] text-white">Hapus</button>
+                            <button type="submit" onClick={detectHandler} className="py-2 px-6 rounded-full bg-custom-green text-white">Deteksi</button>
                         </div>
                     </article>
                 ) : (

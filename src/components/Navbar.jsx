@@ -2,7 +2,6 @@ import { Link } from "react-router-dom"
 import logoGreen from "../assets/logo-green.png"
 
 export default function Navbar(){
-
     const links = [
         {
             label: "Tentang",
@@ -11,6 +10,10 @@ export default function Navbar(){
         {
             label: "Fitur",
             path: "/#features"
+        },
+        {
+            label: "Forum",
+            path: "/forum"
         }
     ]
 
@@ -22,7 +25,9 @@ export default function Navbar(){
             <div className="flex items-center gap-8">
             {
                 links.map((link, index) => (
-                    <a href={link.path} key={index} className="hover:underline">{link.label}</a>
+                    link.path === "/forum" ?
+                    <Link to={link.path} key={index} className="hover:underline">{link.label}</Link>
+                    : <a href={link.path} key={index} className="hover:underline">{link.label}</a>
                 ))
             }
                 <Link to={"/login"} className="py-2 px-6 rounded-full bg-custom-green text-white">Masuk</Link>
