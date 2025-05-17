@@ -1,6 +1,7 @@
 import { useRef } from "react"
 import logoGreen from "../assets/logo-green.png"
 import { Link } from "react-router-dom"
+import axios from "axios"
 
 export default function Register(){
     const usernameRef = useRef()
@@ -17,15 +18,17 @@ export default function Register(){
                 username: usernameRef.current.value, 
                 email: emailRef.current.value,
                 fullname: fullnameRef.current.value,
-                password: passwordRef.current.value,
-                passwordConfirmation: passwordConfirmationRef.current.value
+                password: passwordRef.current.value
             }
-            const { password, passwordConfirmation } = requestBody
+            const { password } = requestBody
+            const passwordConfirmation = passwordConfirmationRef.current.value
             if (password !== passwordConfirmation){
                 return
             }
 
-            console.log(requestBody)
+            const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
+            const { data } = await axios.post(`${APIEndpoint}/users`, requestBody)
+            console.log(data)
         } catch(error){
             console.log(error)
         }

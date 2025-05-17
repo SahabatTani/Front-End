@@ -22,58 +22,61 @@ export default function Forum(){
 
 function ForumContainer({ onOpenModal }){
     return (
-        <section className="forum-container flex gap-4 m-auto w-[80vw] mt-24">
-            <article className="flex h-fit items-center gap-2 p-2 rounded-full bg-white border border-[#ccc] focus-within:border-transparent focus-within:outline-2 focus-within:outline-custom-green">
-                <IconSearch stroke={1.5} />
-                <input type="search" placeholder="Cari" className="outline-none" />
-            </article>
-            <article className="flex flex-col gap-4">
-                <button type="button" className="flex items-center gap-2 p-2 border border-[#ccc] rounded-full bg-white" onClick={onOpenModal}>
-                    <IconUserCircle />
-                    <p>Buat diskusi baru</p>
-                </button>
-                <section className="flex flex-col border border-[#ccc] rounded-lg bg-white">
-                    <Link to={"/forum/threadId"} className="flex p-2 gap-2 border-b border-[#ccc]">
-                        <div className="flex w-fit">
-                            <IconUserCircle />
-                        </div>
-                        <div className="flex flex-col">
-                            <div className="font-bold">User 7</div>
-                            <p className="line-clamp-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt similique doloribus eaque quibusdam minima unde nisi voluptas adipisci fugit minus.</p>
-                        </div>
-                        <div className="flex items-center h-fit w-fit">
-                            <IconMessageCircle stroke={1.5} />
-                            <p>4</p>
-                        </div>
-                    </Link>
-                    <Link to={"/forum/threadId"} className="flex p-2 gap-2 border-b border-[#ccc]">
-                        <div className="flex w-fit">
-                            <IconUserCircle />
-                        </div>
-                        <div className="flex flex-col">
-                            <div className="font-bold">User 7</div>
-                            <p className="line-clamp-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt similique doloribus eaque quibusdam minima unde nisi voluptas adipisci fugit minus.</p>
-                        </div>
-                        <div className="flex items-center h-fit w-fit">
-                            <IconMessageCircle stroke={1.5} />
-                            <p>7</p>
-                        </div>
-                    </Link>
-                    <Link to={"/forum/threadId"} className="flex p-2 gap-2">
-                        <div className="flex w-fit">
-                            <IconUserCircle />
-                        </div>
-                        <div className="flex flex-col">
-                            <div className="font-bold">User 7</div>
-                            <p className="line-clamp-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt similique doloribus eaque quibusdam minima unde nisi voluptas adipisci fugit minus.</p>
-                        </div>
-                        <div className="flex items-center h-fit w-fit">
-                            <IconMessageCircle stroke={1.5} />
-                            <p>1</p>
-                        </div>
-                    </Link>
-                </section>
-            </article>
+        <section className="forum-container flex flex-col items-center gap-8 px-[10vw] mt-28">
+            <p className="font-bold text-2xl text-center">Forum diskusi</p>
+            <section className="flex gap-4">
+                <article className="flex h-fit items-center gap-2 p-2 rounded-full bg-white border border-[#ccc] focus-within:border-transparent focus-within:outline-2 focus-within:outline-custom-green">
+                    <IconSearch stroke={1.5} />
+                    <input type="search" placeholder="Cari" className="outline-none" />
+                </article>
+                <article className="flex flex-col gap-4">
+                    <button type="button" className="flex items-center gap-2 p-2 border border-[#ccc] rounded-full bg-white" onClick={onOpenModal}>
+                        <IconUserCircle />
+                        <p>Buat diskusi baru</p>
+                    </button>
+                    <section className="flex flex-col border border-[#ccc] rounded-lg bg-white">
+                        <Link to={"/forum/threadId"} className="flex p-2 gap-2 border-b border-[#ccc]">
+                            <div className="flex w-fit">
+                                <IconUserCircle />
+                            </div>
+                            <div className="flex flex-col">
+                                <div className="font-bold">User 7</div>
+                                <p className="line-clamp-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt similique doloribus eaque quibusdam minima unde nisi voluptas adipisci fugit minus.</p>
+                            </div>
+                            <div className="flex items-center h-fit w-fit">
+                                <IconMessageCircle stroke={1.5} />
+                                <p>4</p>
+                            </div>
+                        </Link>
+                        <Link to={"/forum/threadId"} className="flex p-2 gap-2 border-b border-[#ccc]">
+                            <div className="flex w-fit">
+                                <IconUserCircle />
+                            </div>
+                            <div className="flex flex-col">
+                                <div className="font-bold">User 7</div>
+                                <p className="line-clamp-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt similique doloribus eaque quibusdam minima unde nisi voluptas adipisci fugit minus.</p>
+                            </div>
+                            <div className="flex items-center h-fit w-fit">
+                                <IconMessageCircle stroke={1.5} />
+                                <p>7</p>
+                            </div>
+                        </Link>
+                        <Link to={"/forum/threadId"} className="flex p-2 gap-2">
+                            <div className="flex w-fit">
+                                <IconUserCircle />
+                            </div>
+                            <div className="flex flex-col">
+                                <div className="font-bold">User 7</div>
+                                <p className="line-clamp-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt similique doloribus eaque quibusdam minima unde nisi voluptas adipisci fugit minus.</p>
+                            </div>
+                            <div className="flex items-center h-fit w-fit">
+                                <IconMessageCircle stroke={1.5} />
+                                <p>1</p>
+                            </div>
+                        </Link>
+                    </section>
+                </article>
+            </section>
         </section>
     )
 }

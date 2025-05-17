@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom"
 import logoGreen from "../assets/logo-green.png"
+import { useContext } from "react"
+import { AuthContext } from "../contexts/AuthContext"
+import { IconChevronDown } from "@tabler/icons-react"
 
 export default function Navbar(){
+    const { isLogin, user } = useContext(AuthContext)
     const links = [
         {
             label: "Tentang",
@@ -30,7 +34,23 @@ export default function Navbar(){
                     : <a href={link.path} key={index} className="hover:underline">{link.label}</a>
                 ))
             }
+            {
+                isLogin === false &&
                 <Link to={"/login"} className="py-2 px-6 rounded-full bg-custom-green text-white">Masuk</Link>
+            }
+            {
+                isLogin === true &&
+                <div className="account">
+                    <button type="button">
+                        <img src={`${import.meta.env.VITE_USER_AVATAR}?name=${user.username}`} alt="User" />
+                        <IconChevronDown stroke={1.5} width={16} height={16} />
+                    </button>
+                    <div className="menu">
+                        <Link to={"/history"}>Riwayat</Link>
+                        <button type="button">Logout</button>
+                    </div>
+                </div>
+            }
             </div>
         </nav>
     )

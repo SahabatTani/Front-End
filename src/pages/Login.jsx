@@ -1,6 +1,7 @@
 import { useRef } from "react"
 import logoGreen from "../assets/logo-green.png"
 import { Link } from "react-router-dom"
+import axios from "axios"
 
 export default function Login(){
     const identifierRef = useRef()
@@ -15,7 +16,10 @@ export default function Login(){
                 password: passwordRef.current.value
             }
 
-            console.log(requestBody)
+            const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXItejFObk1Qa2pZMzlILUFWMCIsImlhdCI6MTc0NzQ1Mjg5NX0.dgE9OnZzGIukveTvyV0j3cB250yjs1q4iPCeTKDJTBQ"
+            const { data } = await axios.post(`${APIEndpoint}/authentications`, requestBody)
+            console.log(data)
         } catch(error){
             console.log(error)
         }
