@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import logoGreen from "../assets/logo-green.png"
 import { useContext, useEffect, useRef, useState } from "react"
 import { AuthContext } from "../contexts/AuthContext"
-import { IconChevronDown, IconMenu2, IconX } from "@tabler/icons-react"
+import { IconChevronDown, IconHistory, IconLogout, IconMenu2, IconX } from "@tabler/icons-react"
 
 export default function Navbar(){
     const { isLogin, user } = useContext(AuthContext)
@@ -21,14 +21,19 @@ export default function Navbar(){
         }
     ]
 
-    const [showMobileMenu, setShowMobileMenu] = useState(false)
+    const [showAccountMenu, setShowAccountMenu] = useState(false)
+    const accountMenuBtn = useRef()
 
-    const mobileMenuBtn = useRef(null)
+    const [showMobileMenu, setShowMobileMenu] = useState(false)
+    const mobileMenuBtn = useRef()
 
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (!mobileMenuBtn.current.contains(e.target)) {
+            if (!mobileMenuBtn.current.contains(e.target)){
                 setShowMobileMenu(false)
+            }
+            if (!accountMenuBtn.current.contains(e.target)){
+                setShowAccountMenu(false)
             }
         }
     
@@ -63,18 +68,24 @@ export default function Navbar(){
             }
             {
                 isLogin === true &&
-                <div className="account">
-                    <button type="button">
-                        <img src={`${import.meta.env.VITE_USER_AVATAR}?name=${user.username}`} alt="User" />
+                <div className="account relative">
+                    <button type="button" className="flex items-center p-1 rounded-full bg-[#ccc]" onClick={() => setShowAccountMenu(!showAccountMenu)} ref={accountMenuBtn}>
+                        <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${user.username}`} alt="User" className="rounded-full w-8 h-8" />
                         <IconChevronDown stroke={1.5} width={16} height={16} />
                     </button>
-                    <div className="menu">
-                        <Link to={"/history"}>Riwayat</Link>
-                        <button type="button">Logout</button>
+                    <div className={`menu absolute top-[105%] right-0 flex-col bg-white shadow-lg rounded-lg py-1 ${showAccountMenu ? "flex" : "hidden"}`}>
+                        <Link to={"/history"} className="p-2 pr-8 hover:bg-[#ccc] flex items-center gap-2">
+                            <IconHistory stroke={1.5} />
+                            <span>Riwayat</span>
+                        </Link>
+                        <button type="button" className="p-2 pr-8 hover:bg-[#ccc] flex items-center gap-2">
+                            <IconLogout stroke={1.5} />
+                            <span>Keluar</span>
+                        </button>
                     </div>
                 </div>
             }
-                <button type="button" className="mobile-menu-btn hidden mobile:flex" onClick={() => setShowMobileMenu(true)}>
+                <button type="button" className="mobile-menu-btn hidden mobile:flex" onClick={() => setShowMobileMenu(true)} ref={mobileMenuBtn}>
                     <IconMenu2 stroke={1.5} />
                 </button>
             </div>

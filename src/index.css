@@ -9,6 +9,12 @@ button{
     cursor: pointer;
 }
 
+.header{
+    background-image: url("./assets/header-image.jpeg");
+    background-position: center;
+    background-size: cover;
+}
+
 .hero{
     background-image: url("./assets/hero-image.jpg");
     background-position: center;

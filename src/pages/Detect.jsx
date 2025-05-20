@@ -1,15 +1,17 @@
-import { IconArrowNarrowRight, IconCheck, IconCircleCheck, IconClipboard, IconObjectScan, IconPhoto, IconPhotoUp } from "@tabler/icons-react";
+import { IconArrowNarrowRight, IconCircleCheck, IconClipboard, IconObjectScan, IconPhoto, IconPhotoUp } from "@tabler/icons-react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import React, { useState } from "react";
 import rice from "../assets/rice.png"
 import corn from "../assets/corn.png"
 import cassava from "../assets/cassava.png"
+import Header from "../components/Header";
 
 export default function Detect(){
     return (
         <>
         <Navbar />
+        <Header title={"Deteksi tanaman"} />
         <DetectSteps />
         <DetectContainer />
         <Footer />
@@ -34,7 +36,7 @@ function DetectSteps(){
     ]
 
     return (
-        <section className="flex flex-col gap-8 items-center mt-28 mx-auto px-[10vw]">
+        <section className="flex flex-col gap-8 items-center mt-4 mx-auto px-[10vw]">
             <div className="font-bold text-xl">Langkah penggunaan</div>
             <section className="flex items-center gap-4  justify-center">
             {steps.map((step, index) => (
@@ -99,12 +101,12 @@ function DetectContainer(){
     }
 
     return (
-        <section className="flex flex-col gap-8 items-center mt-8 mx-auto px-[10vw] bg-custom-green py-8 justify-center">
+        <section className="flex flex-col gap-8 items-center mt-8 mx-auto px-[10vw] py-8 justify-center">
             <section className="image-inputs flex items-center gap-4">
             {imageInputs.map((item, index) => (
                 <label key={index} className="flex flex-col items-center justify-center p-2 rounded-lg bg-white shadow-lg cursor-pointer min-w-32 min-h-32 relative">
                     <img src={item.img} alt={item.name} className="w-12 h-12" />
-                    <input type="file" hidden onChange={(event) => imageInputHandler(event, item.name)} />
+                    <input type="file" hidden onChange={event => imageInputHandler(event, item.name)} />
                     <span className="font-bold text-sm flex items-center gap-1">
                         <IconPhotoUp stroke={1.5} /><p>{item.name}</p>
                     </span>
@@ -124,8 +126,8 @@ function DetectContainer(){
                         </div>
                     </article>
                 ) : (
-                    <article className="flex items-center justify-center rounded-lg border border-dashed border-[#ccc] w-full h-96">
-                        <p className="text-white">Pratinjau gambar akan ditampilkan di sini</p>
+                    <article className="flex items-center justify-center rounded-lg border border-dashed border-custom-green w-full h-96">
+                        <p>Pratinjau gambar akan ditampilkan di sini</p>
                     </article>
                 )}
             </section>

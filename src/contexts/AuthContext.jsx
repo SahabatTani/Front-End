@@ -21,14 +21,14 @@ export default function AuthProvider({ children }){
             try {
                 const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
     
-                const { data } = await axios.get(APIEndpoint, {
+                const { data } = await axios.get(`${APIEndpoint}/users`, {
                     headers: {
                         "Authorization" : "Bearer " + token
                     }
                 })
     
                 setIsLogin(true)
-                setUser(data.user)
+                setUser(data.data.user)
             } catch (error){
                 localStorage.removeItem("token")
     

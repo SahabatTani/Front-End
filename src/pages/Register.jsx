@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import logoGreen from "../assets/logo-green.png"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 
 export default function Register(){
@@ -9,6 +9,8 @@ export default function Register(){
     const fullnameRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmationRef = useRef()
+
+    const navigate = useNavigate()
 
     const registerHandler = async(event) => {
         try {
@@ -28,7 +30,8 @@ export default function Register(){
 
             const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
             const { data } = await axios.post(`${APIEndpoint}/users`, requestBody)
-            console.log(data)
+            localStorage.setItem("token", data.data.accessToken)
+            navigate("/detect")
         } catch(error){
             console.log(error)
         }

@@ -22,6 +22,7 @@ export default function ThreadProvider({ children }){
                 const { data } = await axios.get(`${APIEndpoint}/threads`)
 
                 setThreads(data.data.threads)
+                console.log(data)
             } catch (error){
                 console.log(error)
                 setThreads(null)

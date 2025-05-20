@@ -1,10 +1,12 @@
 import Footer from "../components/Footer"
+import Header from "../components/Header"
 import Navbar from "../components/Navbar"
 
 export default function History(){
     return (
         <>
         <Navbar />
+        <Header title={"Riwayat deteksi tanaman"} />
         <HistoryContainer />
         <Footer />
         </>
@@ -35,8 +37,7 @@ function HistoryContainer(){
     ]
 
     return (
-        <section className="history-container flex flex-col items-center gap-8 mt-28 px-[10vw]">
-            <p className="font-bold text-2xl text-center">Riwayat deteksi tanaman</p>
+        <section className="history-container flex flex-col items-center gap-8 mt-4 px-[10vw]">
             <section className="grid grid-cols-4 gap-8">
             {histories.map((history, index) => (
                 <article className="flex flex-col rounded-lg bg-white overflow-hidden" key={index}>
