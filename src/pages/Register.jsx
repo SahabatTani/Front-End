@@ -35,7 +35,7 @@ export default function Register(){
     }
 
     return (
-        <section className="register flex items-center justify-center w-screen h-screen">
+        <section className="register flex items-center justify-center w-screen h-screen mobile:h-auto mobile:py-8">
             <form className="bg-white border-b-8 border-custom-green rounded-3xl shadow-lg p-8 flex flex-col items-center gap-8" onSubmit={registerHandler}>
                 <img src={logoGreen} alt="SahabatTani" className="w-16 h-16" />
                 <p className="text-2xl font-bold">Daftar ke SahabatTani</p>

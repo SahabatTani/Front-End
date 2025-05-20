@@ -11,11 +11,22 @@ import NotFound from './pages/NotFound';
 import AuthProvider from './contexts/AuthContext';
 import HistoryProvider from './contexts/HistoryContext';
 import ThreadProvider from './contexts/ThreadContext';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
 	return (
 		<Router>
 			<AuthProvider>
+			<ToastContainer
+				position="top-center"
+				autoClose={750}
+				hideProgressBar
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				draggable
+				theme="light"
+			/>
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />

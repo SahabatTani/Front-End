@@ -15,10 +15,10 @@ export default function Footer(){
     ]
 
     return (
-        <footer className="flex flex-col px-[10vw] py-8 mt-8 bg-custom-green text-white">
+        <footer className="flex flex-col px-[10vw] py-8 mt-8 bg-custom-green text-white mobile:px-4 tablet:px-[5vw]">
             <article className="flex justify-between">
                 <img src={logoWhite} alt="SahabatTani" className="w-12 h-12" />
-                <div className="flex gap-4">
+                <div className="flex gap-4 mobile:flex-col">
                 {contacts.map((contact, index) => (
                     <Link className="flex" key={index}>
                         {contact.svg}
@@ -27,7 +27,7 @@ export default function Footer(){
                 ))}
                 </div>
             </article>
-            <p className="pt-8">© Hak Cipta 2025  SahabatTani</p>
+            <p className="pt-8 mobile:text-center">© Hak Cipta 2025  SahabatTani</p>
         </footer>
     )
 }

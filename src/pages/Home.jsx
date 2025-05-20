@@ -26,11 +26,11 @@ export default function Home(){
 function Hero(){
     return (
         <section className="hero h-screen flex">
-            <div className="inner-hero w-full flex flex-col gap-6 justify-center pl-[10vw] bg-gradient-to-r from-custom-green from-10% to-transparent">
-                <div className="flex flex-col text-3xl text-white">
-                    <p className="font-bold">Kenali penyakit tanaman</p>
-                    <p className="font-bold">dapatkan solusi terbaik</p>
-                    <p className="font-bold">dalam hitungan detik</p>
+            <div className="inner-hero w-full flex flex-col gap-6 justify-center pl-[10vw] bg-gradient-to-r from-custom-green from-10% to-transparent mobile:p-0 mobile:items-center tablet:pl-[5vw]">
+                <div className="flex flex-col text-3xl text-white mobile:items-center">
+                    <p className="font-bold mobile:text-center">Kenali penyakit tanaman</p>
+                    <p className="font-bold mobile:text-center">dapatkan solusi terbaik</p>
+                    <p className="font-bold mobile:text-center">dalam hitungan detik</p>
                 </div>
                 <Link to={"/detect"} className="py-2 px-6 rounded-full bg-white w-fit">Coba sekarang</Link>
             </div>
@@ -40,8 +40,8 @@ function Hero(){
 
 function About(){
     return (
-        <section className="about px-[10vw] flex py-12 gap-8" id="about">
-            <div className="flex flex-col gap-8 w-full ">
+        <section className="about px-[10vw] flex py-12 gap-8 mobile:px-4 mobile:flex-col-reverse tablet:px-[5vw]" id="about">
+            <div className="flex flex-col gap-8 w-full mobile:gap-2">
                 <p className="text-2xl"><span className="font-bold">Tentang</span> kami</p>
                 <article className="flex flex-col gap-4">
                     <p>SahabatTani merupakan platform digital yang hadir untuk mendampingi petani dalam menjaga kesehatan tanamannya. Melalui fitur deteksi penyakit berbasis foto dan rekomendasi penanganan yang akurat, kami membantu petani mengambil keputusan secara cepat dan tepat.</p>
@@ -80,9 +80,9 @@ function Features(){
     ]
 
     return (
-        <section className="features px-[10vw] flex flex-col py-12 gap-8 bg-custom-green" id="features">
+        <section className="features px-[10vw] flex flex-col py-12 gap-8 bg-custom-green mobile:px-4 tablet:px-[5vw]" id="features">
             <p className="text-2xl font-bold text-white">Fitur</p>
-            <article className="flex gap-4 w-full justify-between">
+            <article className="flex gap-4 w-full justify-between mobile:flex-col">
             {features.map((feature, index) => (
                 <div className="flex flex-col gap-4 bg-white rounded-lg p-4" key={index}>
                     <div className="w-10 h-10">{feature.svg}</div>
@@ -118,7 +118,7 @@ function UserMap() {
         },
     ];
     return (
-        <section className="map px-[10vw] flex flex-col py-12 gap-8">
+        <section className="map px-[10vw] flex flex-col py-12 gap-8 mobile:px-4 tablet:px-[5vw]">
             <p className="text-2xl"><span className="font-bold">Peta</span> persebaran</p>
             <MapContainer center={[-7.7956, 110.3695]} zoom={10} style={{ height: '500px', width: '100%' }}>
                 <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
