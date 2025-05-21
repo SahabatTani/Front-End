@@ -70,7 +70,7 @@ export default function Navbar(){
                 isLogin === true &&
                 <div className="account relative">
                     <button type="button" className="flex items-center p-1 rounded-full bg-[#ccc]" onClick={() => setShowAccountMenu(!showAccountMenu)} ref={accountMenuBtn}>
-                        <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${user.username}`} alt="User" className="rounded-full w-8 h-8" />
+                        <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${user.fullname}`} alt="User" className="rounded-full w-8 h-8" />
                         <IconChevronDown stroke={1.5} width={16} height={16} />
                     </button>
                     <div className={`menu absolute top-[105%] right-0 flex-col bg-white shadow-lg rounded-lg py-1 ${showAccountMenu ? "flex" : "hidden"}`}>

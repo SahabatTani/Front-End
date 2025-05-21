@@ -2,7 +2,7 @@ import { IconMessageCircle, IconPhotoUp, IconSearch, IconUserCircle } from "@tab
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
@@ -26,67 +26,42 @@ export default function Forum(){
 }
 
 function ForumContainer({ onOpenModal }){
-    const { isLogin } = useContext(AuthContext)
+    const { isLogin, user } = useContext(AuthContext)
+    const { threads } = useContext(ThreadContext)
 
     return (
         <section className="forum-container flex flex-col items-center gap-8 px-[10vw] mt-4">
-            <section className="flex gap-4">
-                <article className="flex h-fit items-center gap-2 p-2 rounded-full bg-white border border-[#ccc] focus-within:border-transparent focus-within:outline-2 focus-within:outline-custom-green">
+            <section className="flex gap-4 w-full">
+                <article className="flex h-fit items-center gap-2 p-2 rounded-full bg-white border border-[#ccc] focus-within:border-transparent focus-within:outline-2 focus-within:outline-custom-green w-1/4">
                     <IconSearch stroke={1.5} />
                     <input type="search" placeholder="Cari" className="outline-none" />
                 </article>
-                <article className="flex flex-col gap-4">
+                <article className="flex flex-col gap-4 w-3/4">
                 {
                     isLogin === true &&
-                    <button type="button" className="flex items-center gap-2 p-2 border border-[#ccc] rounded-full bg-white" onClick={onOpenModal}>
-                        <IconUserCircle />
+                    <button type="button" className="flex items-center gap-2 p-2 border border-[#ccc] rounded-full" onClick={onOpenModal}>
+                        <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${user.fullname}`} alt="User" className="rounded-full w-6 h-6" />
                         <p>Buat diskusi baru</p>
                     </button> 
                 }
                 {
                     isLogin === false &&
-                    <div className="p-2 border border-[#ccc] rounded-full bg-white">Silahkan masuk untuk membuat diskusi baru</div>
+                    <div className="p-2 border border-[#ccc] rounded-full">Silahkan masuk untuk membuat diskusi baru</div>
                 }
-                    <section className="flex flex-col border border-[#ccc] rounded-lg bg-white">
-                        <Link to={"/forum/threadId"} className="flex p-2 gap-2 border-b border-[#ccc]">
-                            <div className="flex w-fit">
-                                <IconUserCircle />
-                            </div>
-                            <div className="flex flex-col">
-                                <div className="font-bold">User 7</div>
-                                <p className="line-clamp-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt similique doloribus eaque quibusdam minima unde nisi voluptas adipisci fugit minus.</p>
-                            </div>
-                            <div className="flex items-center h-fit w-fit">
-                                <IconMessageCircle stroke={1.5} />
-                                <p>4</p>
-                            </div>
-                        </Link>
-                        <Link to={"/forum/threadId"} className="flex p-2 gap-2 border-b border-[#ccc]">
-                            <div className="flex w-fit">
-                                <IconUserCircle />
-                            </div>
-                            <div className="flex flex-col">
-                                <div className="font-bold">User 7</div>
-                                <p className="line-clamp-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt similique doloribus eaque quibusdam minima unde nisi voluptas adipisci fugit minus.</p>
+                    <section className="flex flex-col border border-[#ccc] rounded-lg">
+                    {threads && threads.map((thread, index) => (
+                        <Link to={`/forum/${thread.id}`} className="flex p-2 gap-2 border-b border-[#ccc]" key={index}>
+                            <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${thread.fullname}`} alt="User" className="rounded-full w-6 h-6" />
+                            <div className="flex flex-col w-full">
+                                <div className="font-bold">{thread.fullname}</div>
+                                <p className="line-clamp-2">{thread.title}</p>
                             </div>
                             <div className="flex items-center h-fit w-fit">
                                 <IconMessageCircle stroke={1.5} />
-                                <p>7</p>
+                                <p>{thread.total_comments}</p>
                             </div>
                         </Link>
-                        <Link to={"/forum/threadId"} className="flex p-2 gap-2">
-                            <div className="flex w-fit">
-                                <IconUserCircle />
-                            </div>
-                            <div className="flex flex-col">
-                                <div className="font-bold">User 7</div>
-                                <p className="line-clamp-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt similique doloribus eaque quibusdam minima unde nisi voluptas adipisci fugit minus.</p>
-                            </div>
-                            <div className="flex items-center h-fit w-fit">
-                                <IconMessageCircle stroke={1.5} />
-                                <p>1</p>
-                            </div>
-                        </Link>
+                    ))}
                     </section>
                 </article>
             </section>
