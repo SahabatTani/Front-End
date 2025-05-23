@@ -1,14 +1,16 @@
-import { IconMessageCircle, IconPhotoUp, IconSearch, IconUserCircle } from "@tabler/icons-react";
+import { IconMessageCircle, IconPhotoUp, IconSearch, IconUserCircle, IconX } from "@tabler/icons-react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Header from "../components/Header";
 import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
 import { ThreadContext } from "../contexts/ThreadContext";
+import { toast } from "react-toastify";
 
 export default function Forum(){
+    document.title = "SahabatTani | Forum diskusi"
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     return (
@@ -30,13 +32,13 @@ function ForumContainer({ onOpenModal }){
     const { threads } = useContext(ThreadContext)
 
     return (
-        <section className="forum-container flex flex-col items-center gap-8 px-[10vw] mt-4">
-            <section className="flex gap-4 w-full">
-                <article className="flex h-fit items-center gap-2 p-2 rounded-full bg-white border border-[#ccc] focus-within:border-transparent focus-within:outline-2 focus-within:outline-custom-green w-1/4">
+        <section className="forum-container flex flex-col items-center gap-8 px-[10vw] mt-4 mobile:px-4 tablet:px-[5vw]">
+            <section className="flex gap-4 w-full mobile:flex-col">
+                <article className="flex h-fit items-center gap-2 p-2 rounded-full bg-white border border-[#ccc] focus-within:border-transparent focus-within:outline-2 focus-within:outline-custom-green w-1/4 mobile:w-full">
                     <IconSearch stroke={1.5} />
                     <input type="search" placeholder="Cari" className="outline-none" />
                 </article>
-                <article className="flex flex-col gap-4 w-3/4">
+                <article className="flex flex-col gap-4 w-3/4 mobile:w-full">
                 {
                     isLogin === true &&
                     <button type="button" className="flex items-center gap-2 p-2 border border-[#ccc] rounded-full" onClick={onOpenModal}>
@@ -70,72 +72,93 @@ function ForumContainer({ onOpenModal }){
 }
 
 function NewDiscussionModal({ onClose }) {
+    const { user } = useContext(AuthContext)
     const { setThreads } = useContext(ThreadContext)
 
     const titleRef = useRef()
     const contentRef = useRef()
     const [image, setImage] = useState(null)
+    const [imagePreview, setImagePreview] = useState(null)
 
     const imageInputHandler = (event) => {
         const file = event.target.files[0]
         if (file) {
+            setImage(file)
             const previewUrl = URL.createObjectURL(file)
-            setImage(previewUrl)
+            setImagePreview(previewUrl)
         }
     }
-    const postDiscussionHandler = async(event) => {
-        event.preventDefault()
 
+    const postDiscussionHandler = async (event) => {
         try {
+            event.preventDefault()
+
             const token = localStorage.getItem("token")
-            if (!token){
+            if (!token) return
+
+            const requestBody = new FormData()
+            requestBody.append("title", titleRef.current.value)
+            requestBody.append("content", contentRef.current.value)
+            if (image) {
+                requestBody.append("file", image)
+            }
+            if (requestBody.get("title") === "" || requestBody.get("content") === ""){
+                toast.warn("Masih ada kolom yang kosong")
                 return
             }
-
-            const requestBody = {
-                title: titleRef.current.value,
-                content: contentRef.current.value,
-                file: image
-            }
-            console.log(image)
 
             const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
             const { data } = await axios.post(`${APIEndpoint}/threads`, requestBody, {
                 headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "multipart/form-data"
-                }
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
+                },
             })
 
-            const thread = { id: data.data.threadId, ...requestBody }
+            const thread = {
+                id: data.data.threadId,
+                fullname: user.fullname,
+                title: titleRef.current.value,
+                content: contentRef.current.value,
+                image_url: imagePreview,
+                created_at: new Date().toISOString(),
+                total_comments: "0"
+            }
 
-            setThreads(threads => [thread, ...threads])
+            setThreads((threads) => [thread, ...threads])
             onClose()
-        } catch(error){
-            console.log(error)
+        } catch (error) {
+            console.error(error)
         }
     }
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white w-[75vw] rounded-lg shadow-lg">
-                <h2 className="font-bold p-2">Buat Diskusi Baru</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1200] mobile:px-4 tablet:px-[5vw]" onClick={onClose}>
+            <div className="bg-white w-[60vw] rounded-lg shadow-lg mobile:w-full tablet:w-full" onClick={(e) => e.stopPropagation()}>
+                <h2 className="font-bold p-4 text-lg border-b border-[#ccc]">Buat Diskusi Baru</h2>
                 <form className="flex flex-col" onSubmit={postDiscussionHandler}>
-                    <input type="text" placeholder="Judul diskusi" className="border-t border-b border-[#ccc] p-2 outline-none" ref={titleRef} />
-                    <textarea placeholder="Isi diskusi" className="border-b border-[#ccc] p-2 h-40 resize-none outline-none" ref={contentRef} />
-                    <div className="flex border-b border-[#ccc] p-2">
-                        <label className="flex items-center gap-2 w-fit cursor-pointer">
+                    <input type="text" placeholder="Judul diskusi" className="border-b border-[#ccc] p-2 outline-none" ref={titleRef} required/>
+                    <textarea placeholder="Isi diskusi" className="border-b border-[#ccc] p-2 h-40 resize-none outline-none" ref={contentRef} required />
+                    <div className="flex flex-col gap-2 border-b border-[#ccc] p-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
                             <IconPhotoUp stroke={1.5} />
-                            <p>Unggah gambar</p>
+                            <span>Unggah gambar</span>
                             <input type="file" hidden onChange={imageInputHandler} />
                         </label>
+                        {imagePreview && 
+                        <div className="w-32 h-32 relative group">
+                            <button type="button" className="absolute w-fit h-fit -top-2 -right-2 bg-white rounded-full p-1 border border-[#ccc] hidden group-hover:block" onClick={() => setImagePreview(null)}>
+                                <IconX stroke={1.5} width={16} height={16} />
+                            </button>
+                            <img src={imagePreview} alt="Pratinjau" className="w-full h-full object-cover rounded-lg border border-[#ccc]" />
+                        </div>}
                     </div>
-                    <div className="flex justify-end gap-2 p-2">
+                    <div className="flex justify-end gap-2 p-4">
                         <button type="button" onClick={onClose} className="py-2 px-6 rounded-full bg-[#ff3d3d] text-white">Batal</button>
                         <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white">Kirim</button>
                     </div>
                 </form>
             </div>
         </div>
-    );
+    )
 }

@@ -3,6 +3,8 @@ import Header from "../components/Header"
 import Navbar from "../components/Navbar"
 
 export default function History(){
+    document.title = "SahabatTani | Riwayat"
+    
     return (
         <>
         <Navbar />

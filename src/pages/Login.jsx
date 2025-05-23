@@ -2,8 +2,11 @@ import { useRef } from "react"
 import logoGreen from "../assets/logo-green.png"
 import { Link } from "react-router-dom"
 import axios from "axios"
+import { toast } from "react-toastify"
 
 export default function Login(){
+    document.title = "SahabatTani | Masuk"
+    
     const identifierRef = useRef()
     const passwordRef = useRef()
 
@@ -15,12 +18,17 @@ export default function Login(){
                 identifier: identifierRef.current.value,
                 password: passwordRef.current.value
             }
+            if (requestBody.identifier === "" || requestBody.password === ""){
+                toast.warn("Masih ada kolom yang kosong")
+                return
+            }
 
             const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXItejFObk1Qa2pZMzlILUFWMCIsImlhdCI6MTc0NzQ1Mjg5NX0.dgE9OnZzGIukveTvyV0j3cB250yjs1q4iPCeTKDJTBQ"
             const { data } = await axios.post(`${APIEndpoint}/authentications`, requestBody)
-            console.log(data)
+            localStorage.setItem("token", data.data.accessToken)
+            navigate("/detect")
         } catch(error){
+            toast.error("Gagal masuk")
             console.log(error)
         }
     }
@@ -33,11 +41,11 @@ export default function Login(){
                 <div className="flex flex-col gap-4 w-full">
                     <div className="flex flex-col w-full">
                         <label htmlFor="username-email">Username/Email</label>
-                        <input type="text" id="username-email" className="outline-none border border-[#ccc] rounded-sm p-2" ref={identifierRef} />
+                        <input type="text" id="username-email" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={identifierRef} />
                     </div>
                     <div className="flex flex-col w-full">
                         <label htmlFor="password">Password</label>
-                        <input type="password" id="password" className="outline-none border border-[#ccc] rounded-sm p-2" ref={passwordRef} />
+                        <input type="password" id="password" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={passwordRef} />
                     </div>
                     <span>Belum punya akun? <Link to={"/register"} className="hover:underline">Daftar</Link></span>
                     <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white cursor-pointer">Masuk</button>

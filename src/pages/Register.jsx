@@ -2,8 +2,11 @@ import { useRef } from "react"
 import logoGreen from "../assets/logo-green.png"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
+import { toast } from "react-toastify"
 
 export default function Register(){
+    document.title = "SahabatTani | Daftar"
+    
     const usernameRef = useRef()
     const emailRef = useRef()
     const fullnameRef = useRef()
@@ -24,7 +27,12 @@ export default function Register(){
             }
             const { password } = requestBody
             const passwordConfirmation = passwordConfirmationRef.current.value
+            if (requestBody.username === "" || requestBody.email === "" || requestBody.fullname === "" || password === "" || passwordConfirmation === ""){
+                toast.warn("Masih ada kolom yang kosong")
+                return
+            }
             if (password !== passwordConfirmation){
+                toast.warn("Konfirmasi password tidak sesuai")
                 return
             }
 
@@ -33,6 +41,7 @@ export default function Register(){
             localStorage.setItem("token", data.data.accessToken)
             navigate("/detect")
         } catch(error){
+            toast.error("Gagal daftar")
             console.log(error)
         }
     }
@@ -45,23 +54,23 @@ export default function Register(){
                 <div className="flex flex-col gap-4 w-full">
                     <div className="flex flex-col w-full">
                         <label htmlFor="username">Username</label>
-                        <input type="text" id="username" className="outline-none border border-[#ccc] rounded-sm p-2" ref={usernameRef} />
+                        <input type="text" id="username" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={usernameRef} />
                     </div>
                     <div className="flex flex-col w-full">
                         <label htmlFor="email">Email</label>
-                        <input type="email" id="email" className="outline-none border border-[#ccc] rounded-sm p-2" ref={emailRef} />
+                        <input type="email" id="email" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={emailRef} />
                     </div>
                     <div className="flex flex-col w-full">
                         <label htmlFor="nama_lengkap">Nama lengkap</label>
-                        <input type="text" id="nama_lengkap" className="outline-none border border-[#ccc] rounded-sm p-2" ref={fullnameRef} />
+                        <input type="text" id="nama_lengkap" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={fullnameRef} />
                     </div>
                     <div className="flex flex-col w-full">
                         <label htmlFor="password">Password</label>
-                        <input type="password" id="password" className="outline-none border border-[#ccc] rounded-sm p-2" ref={passwordRef} />
+                        <input type="password" id="password" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={passwordRef} />
                     </div>
                     <div className="flex flex-col w-full">
                         <label htmlFor="password-confirmation">Konfirmasi password</label>
-                        <input type="password" id="password-confirmation" className="outline-none border border-[#ccc] rounded-sm p-2" ref={passwordConfirmationRef} />
+                        <input type="password" id="password-confirmation" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={passwordConfirmationRef} />
                     </div>
                     <span>Sudah punya akun? <Link to={"/login"} className="hover:underline">Masuk</Link></span>
                     <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white">Daftar</button>
