@@ -10,12 +10,6 @@ export default function ThreadProvider({ children }){
 
     useEffect(() => {
         const getHistories = async() => {
-            const token = localStorage.getItem("token")
-    
-            if (!token){
-                return
-            }
-    
             try {
                 const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
 
