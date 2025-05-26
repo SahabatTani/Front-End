@@ -1,8 +1,10 @@
-import { useRef } from "react"
+import { useContext, useRef, useState } from "react"
 import logoGreen from "../assets/logo-green.png"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { toast } from "react-toastify"
+import { LoaderContext } from "../contexts/LoaderContext"
+import Loader from "../components/Loader"
 
 export default function Login(){
     document.title = "SahabatTani | Masuk"
@@ -10,9 +12,19 @@ export default function Login(){
     const identifierRef = useRef()
     const passwordRef = useRef()
 
+    const navigate = useNavigate()
+
+    const [isLoading, setIsLoading] = useState(false)
+    const { setLoaderElementWidth, setLoaderElementHeight } = useContext(LoaderContext)
+
     const loginHandler = async(event) => {
         try {
             event.preventDefault()
+
+            setIsLoading(true)
+            const btnElement = event.currentTarget.querySelector('button[type="submit"]')
+            setLoaderElementWidth(btnElement.clientWidth)
+            setLoaderElementHeight(btnElement.clientHeight)
 
             const requestBody = {
                 identifier: identifierRef.current.value,
@@ -27,8 +39,10 @@ export default function Login(){
             const { data } = await axios.post(`${APIEndpoint}/authentications`, requestBody)
             localStorage.setItem("token", data.data.accessToken)
             navigate("/detect")
+            setIsLoading(false)
         } catch(error){
-            toast.error("Gagal masuk")
+            setIsLoading(false)
+            toast.error(error.response.data.message)
             console.log(error)
         }
     }
@@ -48,7 +62,9 @@ export default function Login(){
                         <input type="password" id="password" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={passwordRef} />
                     </div>
                     <span>Belum punya akun? <Link to={"/register"} className="hover:underline">Daftar</Link></span>
-                    <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white cursor-pointer">Masuk</button>
+                    {isLoading ? 
+                    <Loader /> :
+                    <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white cursor-pointer">Masuk</button>}
                 </div>
             </form>
         </section>

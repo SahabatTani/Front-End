@@ -8,6 +8,8 @@ import { DateParser } from "../utils/DateParser";
 import Header from "../components/Header";
 import { AuthContext } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
+import { LoaderContext } from "../contexts/LoaderContext";
+import Loader from "../components/Loader";
 
 export default function ThreadDetail(){
     document.title = "SahabatTani | Forum diskusi"
@@ -104,6 +106,9 @@ function CommentForm({ threadId, setThread }){
     const [image, setImage] = useState(null)
     const [imagePreview, setImagePreview] = useState(null)
 
+    const [isLoading, setIsLoading] = useState(false)
+    const { setLoaderElementWidth, setLoaderElementHeight } = useContext(LoaderContext)
+
     const imageInputHandler = (event) => {
         const file = event.target.files[0]
         if (file) {
@@ -116,6 +121,11 @@ function CommentForm({ threadId, setThread }){
     const postCommentHandler = async(event) => {
         try {
             event.preventDefault()
+
+            const btnElement = event.currentTarget.querySelector("button[type='submit']")
+            setIsLoading(true)
+            setLoaderElementWidth(btnElement.clientWidth)
+            setLoaderElementHeight(btnElement.clientHeight)
 
             const token = localStorage.getItem("token")
             if (!token) return
@@ -147,9 +157,12 @@ function CommentForm({ threadId, setThread }){
             }
             setThread(thread => ({...thread, comments: [comment, ...thread.comments]}))
 
-            console.log(data)
+            toast.success("Komentar berhasil ditambahkan")
+            setIsLoading(false)
         } catch(error){
+            setIsLoading(false)
             console.log(error)
+            toast.error("Gagal membuat komentar")
         }
     }
 
@@ -171,7 +184,9 @@ function CommentForm({ threadId, setThread }){
                     <img src={imagePreview} alt="Pratinjau" className="w-full h-full object-cover rounded-lg border border-[#ccc]" />
                 </div>}
             </div>
-            <button type="submit" className="py-2 px-6 my-2 mr-2 rounded-full bg-custom-green text-white self-end w-fit">Kirim</button>
+            {isLoading ?
+            <Loader className={"self-end my-2 mr-2"} /> :
+            <button type="submit" className="py-2 px-6 my-2 mr-2 rounded-full bg-custom-green text-white self-end w-fit">Kirim</button>}
         </form>
     )
 }

@@ -1,11 +1,13 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import logoGreen from "../assets/logo-green.png"
 import { useContext, useEffect, useRef, useState } from "react"
 import { AuthContext } from "../contexts/AuthContext"
 import { IconChevronDown, IconHistory, IconLogout, IconMenu2, IconX } from "@tabler/icons-react"
 
 export default function Navbar(){
-    const { isLogin, user } = useContext(AuthContext)
+    const { isLogin, user, setUser, setIsLogin } = useContext(AuthContext)
+    const navigate = useNavigate()
+
     const links = [
         {
             label: "Tentang",
@@ -14,6 +16,10 @@ export default function Navbar(){
         {
             label: "Fitur",
             path: "/#features"
+        },
+        {
+            label: "Deteksi",
+            path: "/detect"
         },
         {
             label: "Forum",
@@ -44,6 +50,13 @@ export default function Navbar(){
         }
     }, [])
 
+    const logoutHandler = () => {
+        localStorage.removeItem("token")
+        setUser(null)
+        setIsLogin(false)
+        navigate("/")
+    }
+
     return (
         <nav className="bg-white px-[10vw] py-4 flex items-center justify-between border border-b border-[#ccc] fixed top-0 left-0 w-full z-[1200] mobile:px-4 tablet:px-[5vw]">
             <Link to={"/"} className="logo">
@@ -56,9 +69,9 @@ export default function Navbar(){
                     </button>
                 {
                     links.map((link, index) => (
-                        link.path === "/forum" ?
+                        link.path.includes("#") ?
+                        <a href={link.path} key={index} className="hover:underline">{link.label}</a> :
                         <Link to={link.path} key={index} className="hover:underline">{link.label}</Link>
-                        : <a href={link.path} key={index} className="hover:underline">{link.label}</a>
                     ))
                 }
                 </div>
@@ -78,7 +91,7 @@ export default function Navbar(){
                             <IconHistory stroke={1.5} />
                             <span>Riwayat</span>
                         </Link>
-                        <button type="button" className="p-2 pr-8 hover:bg-[#ccc] flex items-center gap-2">
+                        <button type="button" className="p-2 pr-8 hover:bg-[#ccc] flex items-center gap-2" onClick={logoutHandler}>
                             <IconLogout stroke={1.5} />
                             <span>Keluar</span>
                         </button>

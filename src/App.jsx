@@ -12,11 +12,13 @@ import AuthProvider from './contexts/AuthContext';
 import HistoryProvider from './contexts/HistoryContext';
 import ThreadProvider from './contexts/ThreadContext';
 import { ToastContainer } from 'react-toastify';
+import LoaderProvider from './contexts/LoaderContext';
 
 function App() {
 	return (
 		<Router>
 			<AuthProvider>
+			<LoaderProvider>
 			<ToastContainer
 				position="top-center"
 				autoClose={750}
@@ -25,7 +27,7 @@ function App() {
 				closeOnClick
 				rtl={false}
 				draggable
-				theme="light"
+				theme="colored"
 			/>
 			<Routes>
 				<Route path="/" element={<Home />} />
@@ -50,6 +52,7 @@ function App() {
 				<Route path="/forum/:threadId" element={<ThreadDetail />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
+			</LoaderProvider>
 			</AuthProvider>
 		</Router>
 	);

@@ -1,4 +1,4 @@
-import { IconMessageCircle, IconPhotoUp, IconSearch, IconUserCircle, IconX } from "@tabler/icons-react";
+import { IconMessageCircle, IconPhotoUp, IconSearch, IconX } from "@tabler/icons-react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
@@ -8,6 +8,8 @@ import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
 import { ThreadContext } from "../contexts/ThreadContext";
 import { toast } from "react-toastify";
+import { LoaderContext } from "../contexts/LoaderContext";
+import Loader from "../components/Loader";
 
 export default function Forum(){
     document.title = "SahabatTani | Forum diskusi"
@@ -80,6 +82,9 @@ function NewDiscussionModal({ onClose }) {
     const [image, setImage] = useState(null)
     const [imagePreview, setImagePreview] = useState(null)
 
+    const [isLoading, setIsLoading] = useState(false)
+    const { setLoaderElementWidth, setLoaderElementHeight } = useContext(LoaderContext)
+
     const imageInputHandler = (event) => {
         const file = event.target.files[0]
         if (file) {
@@ -92,6 +97,11 @@ function NewDiscussionModal({ onClose }) {
     const postDiscussionHandler = async (event) => {
         try {
             event.preventDefault()
+
+            const btnElement = event.currentTarget.querySelector("button[type='submit']")
+            setIsLoading(true)
+            setLoaderElementWidth(btnElement.clientWidth)
+            setLoaderElementHeight(btnElement.clientHeight)
 
             const token = localStorage.getItem("token")
             if (!token) return
@@ -127,8 +137,12 @@ function NewDiscussionModal({ onClose }) {
 
             setThreads((threads) => [thread, ...threads])
             onClose()
+            toast.success("Diskusi berhasil ditambahkan")
+            setIsLoading(false)
         } catch (error) {
+            setIsLoading(false)
             console.error(error)
+            toast.error("Gagal membuat diskusi baru")
         }
     }
 
@@ -155,7 +169,9 @@ function NewDiscussionModal({ onClose }) {
                     </div>
                     <div className="flex justify-end gap-2 p-4">
                         <button type="button" onClick={onClose} className="py-2 px-6 rounded-full bg-[#ff3d3d] text-white">Batal</button>
-                        <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white">Kirim</button>
+                        {isLoading ?
+                        <Loader /> :
+                        <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white">Kirim</button>}
                     </div>
                 </form>
             </div>

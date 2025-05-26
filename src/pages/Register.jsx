@@ -1,8 +1,10 @@
-import { useRef } from "react"
+import { useContext, useRef, useState } from "react"
 import logoGreen from "../assets/logo-green.png"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { toast } from "react-toastify"
+import { LoaderContext } from "../contexts/LoaderContext"
+import Loader from "../components/Loader"
 
 export default function Register(){
     document.title = "SahabatTani | Daftar"
@@ -13,11 +15,19 @@ export default function Register(){
     const passwordRef = useRef()
     const passwordConfirmationRef = useRef()
 
+    const [isLoading, setIsLoading] = useState(false)
+    const { setLoaderElementWidth, setLoaderElementHeight } = useContext(LoaderContext)
+
     const navigate = useNavigate()
 
     const registerHandler = async(event) => {
         try {
             event.preventDefault()
+
+            const btnElement = event.currentTarget.querySelector("button[type='submit']")
+            setIsLoading(true)
+            setLoaderElementWidth(btnElement.clientWidth)
+            setLoaderElementHeight(btnElement.clientHeight)
             
             const requestBody = {
                 username: usernameRef.current.value, 
@@ -40,9 +50,11 @@ export default function Register(){
             const { data } = await axios.post(`${APIEndpoint}/users`, requestBody)
             localStorage.setItem("token", data.data.accessToken)
             navigate("/detect")
+            setIsLoading(false)
         } catch(error){
-            toast.error("Gagal daftar")
+            toast.error(error.response.data.message)
             console.log(error)
+            setIsLoading(false)
         }
     }
 
@@ -73,7 +85,9 @@ export default function Register(){
                         <input type="password" id="password-confirmation" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={passwordConfirmationRef} />
                     </div>
                     <span>Sudah punya akun? <Link to={"/login"} className="hover:underline">Masuk</Link></span>
-                    <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white">Daftar</button>
+                    {isLoading ?
+                    <Loader /> :
+                    <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white">Daftar</button>}
                 </div>
             </form>
         </section>
