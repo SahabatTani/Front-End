@@ -1,14 +1,14 @@
+import { IconClipboard, IconMap, IconSearch, IconUsers } from "@tabler/icons-react"
+import L from 'leaflet'
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
+import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+import 'leaflet/dist/leaflet.css'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { Link } from "react-router-dom"
+import aboutImage from "../assets/about-image.jpg"
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
-import aboutImage from "../assets/about-image.jpg"
-import { IconClipboard, IconMap, IconSearch, IconUsers } from "@tabler/icons-react"
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
 export default function Home(){
     return (
@@ -117,6 +117,7 @@ function UserMap() {
             location: { lat: -6.9, lng: 107.6 },
         },
     ];
+    
     return (
         <section className="map px-[10vw] flex flex-col py-12 gap-8 mobile:px-4 tablet:px-[5vw]">
             <p className="text-2xl"><span className="font-bold">Peta</span> persebaran</p>

@@ -1,15 +1,15 @@
 import { IconMessageCircle, IconPhotoUp, IconSearch, IconX } from "@tabler/icons-react";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
-import { useContext, useRef, useState } from "react";
-import Header from "../components/Header";
-import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
-import { ThreadContext } from "../contexts/ThreadContext";
+import { useContext, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { LoaderContext } from "../contexts/LoaderContext";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 import Loader from "../components/Loader";
+import Navbar from "../components/Navbar";
+import { AuthContext } from "../contexts/AuthContext";
+import { LoaderContext } from "../contexts/LoaderContext";
+import { ThreadContext } from "../contexts/ThreadContext";
 
 export default function Forum(){
     document.title = "SahabatTani | Forum diskusi"
@@ -104,7 +104,6 @@ function NewDiscussionModal({ onClose }) {
             setLoaderElementHeight(btnElement.clientHeight)
 
             const token = localStorage.getItem("token")
-            if (!token) return
 
             const requestBody = new FormData()
             requestBody.append("title", titleRef.current.value)

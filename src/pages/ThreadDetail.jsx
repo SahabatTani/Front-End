@@ -1,15 +1,15 @@
-import { IconPhotoUp, IconX } from "@tabler/icons-react";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-import { useParams } from "react-router-dom";
+import { IconDotsVertical, IconPhotoUp, IconTrash, IconX } from "@tabler/icons-react";
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
-import { DateParser } from "../utils/DateParser";
-import Header from "../components/Header";
-import { AuthContext } from "../contexts/AuthContext";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { LoaderContext } from "../contexts/LoaderContext";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 import Loader from "../components/Loader";
+import Navbar from "../components/Navbar";
+import { AuthContext } from "../contexts/AuthContext";
+import { LoaderContext } from "../contexts/LoaderContext";
+import { DateParser } from "../utils/DateParser";
 
 export default function ThreadDetail(){
     document.title = "SahabatTani | Forum diskusi"
@@ -42,6 +42,8 @@ function ThreadContainer(){
         getThreadHandler()
     }, [])
 
+    const [selectedCommentMenu, setSelectedCommentMenu] = useState("")
+
     return (
         <section className="flex flex-col px-[10vw] mt-4 mx-auto gap-2 mobile:px-4 tablet:px-[5vw]">
         {
@@ -69,22 +71,7 @@ function ThreadContainer(){
                     {thread.comments.length > 0 &&
                     <article className="comments">
                     {thread.comments.map((comment, index) => (
-                        <div className={`comment flex flex-col gap-2 p-2 ${index < thread.comments.length - 1 ? "border-b border-[#ccc]" : ""}`} key={index}>
-                            <div className="flex items-center gap-2">
-                                <div className="flex">
-                                    <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${thread.fullname}`} alt="User" className="rounded-full w-6 h-6" />
-                                </div>
-                                <div className="flex flex-col h-full">
-                                    <p className="font-bold text-sm">{comment.fullname}</p>
-                                    <p className="text-xs">{DateParser(comment.created_at)}</p>
-                                </div>
-                            </div>
-                            <article className="">{comment.content}</article>
-                            {comment.image_url &&
-                            <article className="flex w-1/4 overflow-hidden rounded-lg border border-[#ccc] cursor-pointer" onClick={() => setPopupImageUrl(comment.image_url)}>
-                                <img src={comment.image_url} alt="Image" className="w-full h-full" />
-                            </article>}
-                        </div>
+                        <Comment key={index} comment={comment} selectedCommentMenu={selectedCommentMenu} setSelectedCommentMenu={setSelectedCommentMenu} setPopupImageUrl={setPopupImageUrl} />
                     ))}
                     </article>}
                 </article>
@@ -97,6 +84,62 @@ function ThreadContainer(){
             <img src={popupImageUrl} alt="Popup" className="max-h-[75vh] rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()} />
         </div>}
         </section>
+    )
+}
+
+export function Comment({ comment, selectedCommentMenu, setSelectedCommentMenu, setPopupImageUrl }) {
+    const menuRef = useRef(null)
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setSelectedCommentMenu("")
+            }
+        }
+
+        document.addEventListener("click", handleClickOutside)
+        return () => {
+            document.removeEventListener("click", handleClickOutside)
+        }
+    }, [menuRef])
+
+    return (
+        <div className="comment flex flex-col gap-2 p-2 border-b border-[#ccc]">
+            <div className="flex items-center gap-2">
+                <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${comment.fullname}`} className="rounded-full w-6 h-6" />
+                <div className="flex flex-col w-full">
+                    <p className="font-bold text-sm">{comment.fullname}</p>
+                    <p className="text-xs">{DateParser(comment.created_at)}</p>
+                </div>
+                <div className="relative" ref={menuRef}>
+                    <button
+                        
+                        type="button"
+                        className="rounded-full hover:bg-black/10 p-1"
+                        onClick={() =>
+                            setSelectedCommentMenu(selectedCommentMenu === comment.id ? "" : comment.id)
+                        }
+                    >
+                        <IconDotsVertical stroke={1.5} width={16} height={16} />
+                    </button>
+                    <div className={`menu absolute top-full right-0 py-1 bg-white shadow-lg rounded-lg ${selectedCommentMenu === comment.id ? "flex" : "hidden"} flex-col`}>
+                        <button type="button" className="flex items-center hover:bg-black/10 p-1 text-red-500">
+                            <IconTrash stroke={1.5} width={20} height={20} />
+                            <span className="text-sm">Hapus</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <article>{comment.content}</article>
+            {comment.image_url && (
+                <div
+                    className="flex w-1/4 overflow-hidden rounded-lg border border-[#ccc] cursor-pointer"
+                    onClick={() => setPopupImageUrl(comment.image_url)}
+                >
+                    <img src={comment.image_url} alt="Image" className="w-full h-full" />
+                </div>
+            )}
+        </div>
     )
 }
 

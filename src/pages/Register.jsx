@@ -5,9 +5,12 @@ import axios from "axios"
 import { toast } from "react-toastify"
 import { LoaderContext } from "../contexts/LoaderContext"
 import Loader from "../components/Loader"
+import { AuthContext } from "../contexts/AuthContext"
 
 export default function Register(){
     document.title = "SahabatTani | Daftar"
+
+    const { setIsLogin, setUser } = useContext(AuthContext)
     
     const usernameRef = useRef()
     const emailRef = useRef()
@@ -49,6 +52,8 @@ export default function Register(){
             const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
             const { data } = await axios.post(`${APIEndpoint}/users`, requestBody)
             localStorage.setItem("token", data.data.accessToken)
+            setIsLogin(true)
+            setUser(data.data.user)
             navigate("/detect")
             setIsLoading(false)
         } catch(error){

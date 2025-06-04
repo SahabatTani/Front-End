@@ -5,9 +5,12 @@ import axios from "axios"
 import { toast } from "react-toastify"
 import { LoaderContext } from "../contexts/LoaderContext"
 import Loader from "../components/Loader"
+import { AuthContext } from "../contexts/AuthContext"
 
 export default function Login(){
     document.title = "SahabatTani | Masuk"
+
+    const { setIsLogin } = useContext(AuthContext)
     
     const identifierRef = useRef()
     const passwordRef = useRef()
@@ -38,6 +41,7 @@ export default function Login(){
             const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
             const { data } = await axios.post(`${APIEndpoint}/authentications`, requestBody)
             localStorage.setItem("token", data.data.accessToken)
+            setIsLogin(true)
             navigate("/detect")
             setIsLoading(false)
         } catch(error){

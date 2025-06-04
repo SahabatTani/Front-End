@@ -1,11 +1,14 @@
 import { IconArrowNarrowRight, IconCircleCheck, IconClipboard, IconObjectScan, IconPhoto, IconPhotoUp } from "@tabler/icons-react";
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import cassava from "../assets/cassava.png";
+import corn from "../assets/corn.png";
+import potato from "../assets/potato.png";
+import rice from "../assets/rice.png";
 import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-import React, { useState } from "react";
-import rice from "../assets/rice.png"
-import corn from "../assets/corn.png"
-import cassava from "../assets/cassava.png"
 import Header from "../components/Header";
+import Navbar from "../components/Navbar";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function Detect(){
     return (
@@ -54,18 +57,22 @@ function DetectSteps(){
 }
 
 function DetectContainer(){
+    const { isLogin } = useContext(AuthContext)
     const [selectedPlant, setSelectedPlant] = useState("")
     const [image, setImage] = useState(null)
+    const [imagePreview, setImagePreview] = useState(null)
     const imageInputHandler = (event, plant) => {
         const file = event.target.files[0]
         if (file) {
+            setImage(file)
             const previewUrl = URL.createObjectURL(file)
             setSelectedPlant(plant)
-            setImage(previewUrl)
+            setImagePreview(previewUrl)
         }
     }
     const clearImageInput = () => {
         setImage(null)
+        setImagePreview(null)
         setSelectedPlant("")
     }
     const imageInputs = [
@@ -80,21 +87,42 @@ function DetectContainer(){
         {
             img: cassava,
             name: "Singkong"
+        },
+        {
+            img: potato,
+            name: "Kentang"
         }
     ]
+
+    const getPosition = () => {
+        return new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject)
+        })
+    }
+
     const detectHandler = async() => {
         try {
-            navigator.geolocation.getCurrentPosition(
-                async(position) => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    
-                    console.log(lat, lng)
-                }, (error) => {
-                    console.error('Gagal mendapatkan lokasi:', error);
-                    alert('Gagal mendapatkan lokasi');
-                }
-            );
+            if (isLogin){
+                const position = await getPosition()
+                const lat = position.coords.latitude
+                const long = position.coords.longitude
+                
+                const requestBody = new FormData()
+                requestBody.append("plant", selectedPlant)
+                requestBody.append("latitude", lat)
+                requestBody.append("longitude", long)
+                requestBody.append("image", image)
+
+                const token = localStorage.getItem("token")
+                const MLAPIEndpoint = import.meta.env.VITE_ML_API_ENDPOINT
+                const { data } = await axios.post(`${MLAPIEndpoint}/api/predict`, requestBody, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+
+                console.log(data)
+            }
         } catch(error){
             console.log(error)
         }
@@ -106,7 +134,7 @@ function DetectContainer(){
             {imageInputs.map((item, index) => (
                 <label key={index} className="flex flex-col items-center justify-center p-2 rounded-lg bg-white shadow-lg cursor-pointer min-w-32 min-h-32 relative">
                     <img src={item.img} alt={item.name} className="w-12 h-12" />
-                    <input type="file" hidden onChange={event => imageInputHandler(event, item.name)} />
+                    <input type="file" hidden onChange={event => imageInputHandler(event, item.name.toLowerCase())} />
                     <span className="font-bold text-sm flex items-center gap-1">
                         <IconPhotoUp stroke={1.5} /><p>{item.name}</p>
                     </span>
@@ -117,9 +145,9 @@ function DetectContainer(){
             ))}
             </section>
             <section className="preview flex justify-center items-center mx-auto w-[50vw]">
-                {image ? (
+                {imagePreview ? (
                     <article className="flex flex-col rounded-lg overflow-hidden gap-1">
-                        <img src={image} alt="Preview" className="max-w-full max-h-full object-contain" />
+                        <img src={imagePreview} alt="Preview" className="max-w-full max-h-full object-contain" />
                         <div className="flex justify-end gap-2 p-2 bg-white">
                             <button type="button" onClick={clearImageInput} className="py-2 px-6 rounded-full bg-[#ff3d3d] text-white">Hapus</button>
                             <button type="submit" onClick={detectHandler} className="py-2 px-6 rounded-full bg-custom-green text-white">Deteksi</button>
