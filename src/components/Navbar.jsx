@@ -1,8 +1,8 @@
+import { IconChevronDown, IconHistory, IconLogout, IconMenu2, IconX } from "@tabler/icons-react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import logoGreen from "../assets/logo-green.png"
-import { useContext, useEffect, useRef, useState } from "react"
 import { AuthContext } from "../contexts/AuthContext"
-import { IconChevronDown, IconHistory, IconLogout, IconMenu2, IconX } from "@tabler/icons-react"
 
 export default function Navbar(){
     const { isLogin, user, setUser, setIsLogin } = useContext(AuthContext)
@@ -35,10 +35,10 @@ export default function Navbar(){
 
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (!mobileMenuBtn.current.contains(e.target)){
+            if (mobileMenuBtn.current && !mobileMenuBtn.current.contains(e.target)){
                 setShowMobileMenu(false)
             }
-            if (!accountMenuBtn.current.contains(e.target)){
+            if (accountMenuBtn.current && !accountMenuBtn.current.contains(e.target)){
                 setShowAccountMenu(false)
             }
         }
@@ -91,7 +91,7 @@ export default function Navbar(){
                             <IconHistory stroke={1.5} />
                             <span>Riwayat</span>
                         </Link>
-                        <button type="button" className="p-2 pr-8 hover:bg-[#ccc] flex items-center gap-2" onClick={logoutHandler}>
+                        <button type="button" className="p-2 pr-8 hover:bg-[#ccc] flex items-center gap-2 text-red-400" onClick={logoutHandler}>
                             <IconLogout stroke={1.5} />
                             <span>Keluar</span>
                         </button>

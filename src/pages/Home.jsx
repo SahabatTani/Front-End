@@ -4,11 +4,13 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import 'leaflet/dist/leaflet.css'
+import { useContext } from "react"
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { Link } from "react-router-dom"
 import aboutImage from "../assets/about-image.jpg"
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
+import { HistoryMapContext } from "../contexts/HistoryMapContext"
 
 export default function Home(){
     return (
@@ -103,35 +105,24 @@ L.Icon.Default.mergeOptions({
 });
 
 function UserMap() {
-    const posts = [
-        {
-            id: 1,
-            username: 'alice',
-            content: 'Halo dari Jakarta!',
-            location: { lat: -6.2, lng: 106.8 },
-        },
-        {
-            id: 2,
-            username: 'bob',
-            content: 'Posting dari Bandung!',
-            location: { lat: -6.9, lng: 107.6 },
-        },
-    ];
+    const { historiesMap } = useContext(HistoryMapContext)
     
     return (
         <section className="map px-[10vw] flex flex-col py-12 gap-8 mobile:px-4 tablet:px-[5vw]">
             <p className="text-2xl"><span className="font-bold">Peta</span> persebaran</p>
+            {historiesMap &&
             <MapContainer center={[-7.7956, 110.3695]} zoom={10} style={{ height: '500px', width: '100%' }}>
                 <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
-                {posts.map(post => (
-                    <Marker key={post.id} position={[post.location.lat, post.location.lng]}>
+                {historiesMap.map(history => (
+                    <Marker key={history.id} position={[history.latitude, history.longitude]}>
                         <Popup>
-                            <strong>{post.username}</strong><br />
-                            {post.content}
+                            <strong>{history.user.fullname}</strong>
+                            <p>{history.prediction.plant}</p>
+                            <p>{history.prediction.status}</p>
                         </Popup>
                     </Marker>
                 ))}
-            </MapContainer>
+            </MapContainer>}
             <article></article>
         </section>
     );

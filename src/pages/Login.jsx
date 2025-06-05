@@ -1,16 +1,16 @@
-import { useContext, useRef, useState } from "react"
-import logoGreen from "../assets/logo-green.png"
-import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
+import { useContext, useRef, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { LoaderContext } from "../contexts/LoaderContext"
+import logoGreen from "../assets/logo-green.png"
 import Loader from "../components/Loader"
 import { AuthContext } from "../contexts/AuthContext"
+import { LoaderContext } from "../contexts/LoaderContext"
 
 export default function Login(){
     document.title = "SahabatTani | Masuk"
 
-    const { setIsLogin } = useContext(AuthContext)
+    const { setIsLogin, setUser } = useContext(AuthContext)
     
     const identifierRef = useRef()
     const passwordRef = useRef()
@@ -42,6 +42,7 @@ export default function Login(){
             const { data } = await axios.post(`${APIEndpoint}/authentications`, requestBody)
             localStorage.setItem("token", data.data.accessToken)
             setIsLogin(true)
+            setUser(data.data.user)
             navigate("/detect")
             setIsLoading(false)
         } catch(error){

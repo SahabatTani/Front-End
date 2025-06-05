@@ -1,18 +1,18 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Detect from './pages/Detect';
-import History from './pages/History';
-import HistoryDetail from './pages/HistoryDetail';
-import Forum from './pages/Forum';
-import ThreadDetail from './pages/ThreadDetail';
-import NotFound from './pages/NotFound';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import AuthProvider from './contexts/AuthContext';
 import HistoryProvider from './contexts/HistoryContext';
-import ThreadProvider from './contexts/ThreadContext';
-import { ToastContainer } from 'react-toastify';
+import HistoryMapProvider from './contexts/HistoryMapContext';
 import LoaderProvider from './contexts/LoaderContext';
+import ThreadProvider from './contexts/ThreadContext';
+import Detect from './pages/Detect';
+import Forum from './pages/Forum';
+import History from './pages/History';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import NotFound from './pages/NotFound';
+import Register from './pages/Register';
+import ThreadDetail from './pages/ThreadDetail';
 
 function App() {
 	return (
@@ -30,7 +30,11 @@ function App() {
 				theme="colored"
 			/>
 			<Routes>
-				<Route path="/" element={<Home />} />
+				<Route path="/" element={
+					<HistoryMapProvider>
+						<Home />
+					</HistoryMapProvider>
+				} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Register />} />
 				<Route path="/detect" element={<Detect />} />
@@ -39,17 +43,16 @@ function App() {
 						<History />
 					</HistoryProvider>
 				} />
-				<Route path="/history/:historyId" element={
-					<HistoryProvider>
-						<HistoryDetail />
-					</HistoryProvider>
-				} />
 				<Route path="/forum" element={
 					<ThreadProvider>
 						<Forum />
 					</ThreadProvider>
 				} />
-				<Route path="/forum/:threadId" element={<ThreadDetail />} />
+				<Route path="/forum/:threadId" element={
+					<ThreadProvider>
+						<ThreadDetail />
+					</ThreadProvider>
+				} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 			</LoaderProvider>

@@ -61,7 +61,12 @@ function DetectContainer(){
     const [selectedPlant, setSelectedPlant] = useState("")
     const [image, setImage] = useState(null)
     const [imagePreview, setImagePreview] = useState(null)
+
+    const [result, setResult] = useState(null)
+
     const imageInputHandler = (event, plant) => {
+        setResult(null)
+
         const file = event.target.files[0]
         if (file) {
             setImage(file)
@@ -74,6 +79,7 @@ function DetectContainer(){
         setImage(null)
         setImagePreview(null)
         setSelectedPlant("")
+        setResult(null)
     }
     const imageInputs = [
         {
@@ -102,26 +108,34 @@ function DetectContainer(){
 
     const detectHandler = async() => {
         try {
+            const requestBody = new FormData()
+            requestBody.append("plant", selectedPlant)
+            requestBody.append("image", image)
+
+            const token = localStorage.getItem("token")
+            const MLAPIEndpoint = import.meta.env.VITE_ML_API_ENDPOINT
+
             if (isLogin){
                 const position = await getPosition()
                 const lat = position.coords.latitude
                 const long = position.coords.longitude
                 
-                const requestBody = new FormData()
-                requestBody.append("plant", selectedPlant)
                 requestBody.append("latitude", lat)
                 requestBody.append("longitude", long)
-                requestBody.append("image", image)
 
-                const token = localStorage.getItem("token")
-                const MLAPIEndpoint = import.meta.env.VITE_ML_API_ENDPOINT
                 const { data } = await axios.post(`${MLAPIEndpoint}/api/predict`, requestBody, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
                 })
 
+                setResult(data.data)
                 console.log(data)
+            } else {
+                const { data } = await axios.post(`${MLAPIEndpoint}/api/public-predict`, requestBody)
+
+                setResult(data.data)
+                console.log(data.data)
             }
         } catch(error){
             console.log(error)
@@ -129,7 +143,7 @@ function DetectContainer(){
     }
 
     return (
-        <section className="flex flex-col gap-8 items-center mt-8 mx-auto px-[10vw] py-8 justify-center">
+        <section className="flex flex-col gap-8 items-center mt-8 mx-auto px-[10vw] py-8 justify-center mobile:px-4 tablet:px-[5vw]">
             <section className="image-inputs flex items-center gap-4">
             {imageInputs.map((item, index) => (
                 <label key={index} className="flex flex-col items-center justify-center p-2 rounded-lg bg-white shadow-lg cursor-pointer min-w-32 min-h-32 relative">
@@ -138,7 +152,7 @@ function DetectContainer(){
                     <span className="font-bold text-sm flex items-center gap-1">
                         <IconPhotoUp stroke={1.5} /><p>{item.name}</p>
                     </span>
-                    <div className={`absolute top-0 right-0 text-custom-green ${selectedPlant === item.name ? "" : "hidden"}`}>
+                    <div className={`absolute top-0 right-0 text-custom-green ${selectedPlant === item.name.toLowerCase() ? "" : "hidden"}`}>
                         <IconCircleCheck stroke={1.5} />
                     </div>
                 </label>
@@ -159,7 +173,27 @@ function DetectContainer(){
                     </article>
                 )}
             </section>
-            <section className="result"></section>
+            {result && 
+            <section className="result flex flex-col items-center w-full">
+                <p className="font-bold text-2xl">Hasil deteksi</p>    
+                {result.prediction.status === "Sehat" ? 
+                <p className="font-bold text-center">Sehat</p> :
+                <article className="flex flex-col gap-4">
+                    <p className="font-bold text-center">{result.prediction.status}</p>
+                    <article>
+                        <p className="font-bold">Indikasi</p>
+                        <p className="text-justify">{result.prediction.indication}</p>
+                    </article>
+                    <article>
+                        <p className="font-bold">Penyebab</p>
+                        <p className="text-justify">{result.prediction.reason}</p>
+                    </article>
+                    <article>
+                        <p className="font-bold">Solusi</p>
+                        <p className="text-justify">{result.prediction.solution}</p>
+                    </article>
+                </article>}
+            </section>}
         </section>
     )
 }

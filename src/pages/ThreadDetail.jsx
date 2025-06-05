@@ -1,7 +1,7 @@
 import { IconDotsVertical, IconPhotoUp, IconTrash, IconX } from "@tabler/icons-react";
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -9,6 +9,7 @@ import Loader from "../components/Loader";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../contexts/AuthContext";
 import { LoaderContext } from "../contexts/LoaderContext";
+import { ThreadContext } from "../contexts/ThreadContext";
 import { DateParser } from "../utils/DateParser";
 
 export default function ThreadDetail(){
@@ -25,6 +26,8 @@ export default function ThreadDetail(){
 
 function ThreadContainer(){
     const { threadId } = useParams()
+    const { user } = useContext(AuthContext)
+    const { setThreads } = useContext(ThreadContext)
     const [thread, setThread] = useState(null)
     const [popupImageUrl, setPopupImageUrl] = useState(null)
 
@@ -44,19 +47,65 @@ function ThreadContainer(){
 
     const [selectedCommentMenu, setSelectedCommentMenu] = useState("")
 
+    const navigate = useNavigate()
+    const deleteDiscussionHandler = async() => {
+        try {
+            const token = localStorage.getItem("token")
+
+            const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
+            await axios.delete(`${APIEndpoint}/threads/${thread.id}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+
+            setThreads(threads => threads.filter(t => t.id !== thread.id))
+            navigate("/forum")
+        } catch(error){
+            console.log(error)
+        }
+    } 
+
+    const menuRef = useRef()
+    const [showMenu, setShowMenu] = useState(false)
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)){
+                setShowMenu(false)
+            }
+        }
+    
+        document.addEventListener("click", handleClickOutside)
+    
+        return () => {
+            document.removeEventListener("click", handleClickOutside)
+        }
+    }, [])
+
     return (
         <section className="flex flex-col px-[10vw] mt-4 mx-auto gap-2 mobile:px-4 tablet:px-[5vw]">
-        {
-            thread &&
+            {thread === null && <Loader className={"self-center"} />}
+            {thread &&
             <>
             <article className="account flex items-center gap-2">
-                <div className="flex">
-                    <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${thread.fullname}`} alt="User" className="rounded-full w-8 h-8" />
-                </div>
-                <div className="flex flex-col h-full">
+                <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${thread.fullname}`} alt="User" className="rounded-full w-8 h-8" />
+                <div className="flex flex-col w-full h-full">
                     <p className="font-bold">{thread.fullname}</p>
                     <p className="text-sm">{DateParser(thread.created_at)}</p>
                 </div>
+                {user.username === thread.username &&
+                <div className="relative" ref={menuRef}>
+                    <button type="button" className="rounded-full hover:bg-black/10 p-1" onClick={() => setShowMenu(!showMenu)}>
+                        <IconDotsVertical stroke={1.5} width={16} height={16} />
+                    </button>
+                    <div className={`menu absolute top-full right-0 py-1 bg-white shadow-lg rounded-lg ${showMenu ? "flex" : "hidden"} flex-col overflow-hidden`}>
+                        <button type="button" className="flex items-center hover:bg-black/10 p-1 text-red-500" onClick={deleteDiscussionHandler}>
+                            <IconTrash stroke={1.5} width={20} height={20} />
+                            <span className="text-sm">Hapus</span>
+                        </button>
+                    </div>
+                </div>}
             </article>
             <article className="title font-bold text-xl">{thread.title}</article>
             <article className="content">{thread.content}</article>
@@ -71,65 +120,79 @@ function ThreadContainer(){
                     {thread.comments.length > 0 &&
                     <article className="comments">
                     {thread.comments.map((comment, index) => (
-                        <Comment key={index} comment={comment} selectedCommentMenu={selectedCommentMenu} setSelectedCommentMenu={setSelectedCommentMenu} setPopupImageUrl={setPopupImageUrl} />
+                        <Comment key={index} comment={comment} selectedCommentMenu={selectedCommentMenu} setSelectedCommentMenu={setSelectedCommentMenu} setPopupImageUrl={setPopupImageUrl} setThread={setThread} />
                     ))}
                     </article>}
                 </article>
                 <CommentForm threadId={threadId} setThread={setThread} />
             </article>
-            </>
-        }
-        {popupImageUrl &&
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1200] px-[10vw] mobile:px-4 tablet:px-[5vw]" onClick={() => setPopupImageUrl(null)}>
-            <img src={popupImageUrl} alt="Popup" className="max-h-[75vh] rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()} />
-        </div>}
+            </>}
+            {popupImageUrl &&
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1200] px-[10vw] mobile:px-4 tablet:px-[5vw]" onClick={() => setPopupImageUrl(null)}>
+                <img src={popupImageUrl} alt="Popup" className="max-h-[75vh] rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()} />
+            </div>}
         </section>
     )
 }
 
-export function Comment({ comment, selectedCommentMenu, setSelectedCommentMenu, setPopupImageUrl }) {
+function Comment({ comment, selectedCommentMenu, setSelectedCommentMenu, setPopupImageUrl, setThread }) {
     const menuRef = useRef(null)
+    const { user } = useContext(AuthContext)
 
     useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (menuRef.current && !menuRef.current.contains(e.target)) {
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
                 setSelectedCommentMenu("")
             }
         }
 
-        document.addEventListener("click", handleClickOutside)
-        return () => {
-            document.removeEventListener("click", handleClickOutside)
+        if (selectedCommentMenu === comment.id) {
+            document.addEventListener("mousedown", handleClickOutside)
         }
-    }, [menuRef])
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [selectedCommentMenu, comment.id, setSelectedCommentMenu])
+
+    const deleteCommentHandler = async() => {
+        try {
+            const token = localStorage.getItem("token")
+
+            const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
+            await axios.delete(`${APIEndpoint}/comments/${comment.id}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+
+            setThread(thread => ({...thread, comments: thread.comments.filter(c => c.id !== comment.id)}))
+        } catch(error){
+            console.log(error)
+        }
+    }
 
     return (
-        <div className="comment flex flex-col gap-2 p-2 border-b border-[#ccc]">
-            <div className="flex items-center gap-2">
+        <article className="comment flex flex-col gap-2 p-2 border-b border-[#ccc]">
+            <article className="flex items-center gap-2">
                 <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${comment.fullname}`} className="rounded-full w-6 h-6" />
-                <div className="flex flex-col w-full">
+                <article className="flex flex-col w-full">
                     <p className="font-bold text-sm">{comment.fullname}</p>
                     <p className="text-xs">{DateParser(comment.created_at)}</p>
-                </div>
+                </article>
+                {user.username === comment.username &&
                 <div className="relative" ref={menuRef}>
-                    <button
-                        
-                        type="button"
-                        className="rounded-full hover:bg-black/10 p-1"
-                        onClick={() =>
-                            setSelectedCommentMenu(selectedCommentMenu === comment.id ? "" : comment.id)
-                        }
-                    >
+                    <button type="button" className="rounded-full hover:bg-black/10 p-1" onClick={() => setSelectedCommentMenu(selectedCommentMenu === comment.id ? "" : comment.id)}>
                         <IconDotsVertical stroke={1.5} width={16} height={16} />
                     </button>
-                    <div className={`menu absolute top-full right-0 py-1 bg-white shadow-lg rounded-lg ${selectedCommentMenu === comment.id ? "flex" : "hidden"} flex-col`}>
-                        <button type="button" className="flex items-center hover:bg-black/10 p-1 text-red-500">
+                    <div className={`menu absolute top-full right-0 py-1 bg-white shadow-lg rounded-lg ${selectedCommentMenu === comment.id ? "flex" : "hidden"} flex-col overflow-hidden`}>
+                        <button type="button" className="flex items-center hover:bg-black/10 p-1 text-red-500" onClick={deleteCommentHandler}>
                             <IconTrash stroke={1.5} width={20} height={20} />
                             <span className="text-sm">Hapus</span>
                         </button>
                     </div>
-                </div>
-            </div>
+                </div>}
+            </article>
             <article>{comment.content}</article>
             {comment.image_url && (
                 <div
@@ -139,7 +202,7 @@ export function Comment({ comment, selectedCommentMenu, setSelectedCommentMenu, 
                     <img src={comment.image_url} alt="Image" className="w-full h-full" />
                 </div>
             )}
-        </div>
+        </article>
     )
 }
 
