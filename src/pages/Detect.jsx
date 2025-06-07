@@ -3,12 +3,14 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import cassava from "../assets/cassava.png";
 import corn from "../assets/corn.png";
-import potato from "../assets/potato.png";
+import mango from "../assets/mango.png";
 import rice from "../assets/rice.png";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import Loader from "../components/Loader";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../contexts/AuthContext";
+import { LoaderContext } from "../contexts/LoaderContext";
 
 export default function Detect(){
     return (
@@ -63,6 +65,8 @@ function DetectContainer(){
     const [imagePreview, setImagePreview] = useState(null)
 
     const [result, setResult] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+    const { setLoaderElementWidth, setLoaderElementHeight } = useContext(LoaderContext)
 
     const imageInputHandler = (event, plant) => {
         setResult(null)
@@ -95,8 +99,8 @@ function DetectContainer(){
             name: "Singkong"
         },
         {
-            img: potato,
-            name: "Kentang"
+            img: mango,
+            name: "Mangga"
         }
     ]
 
@@ -106,8 +110,12 @@ function DetectContainer(){
         })
     }
 
-    const detectHandler = async() => {
+    const detectHandler = async(event) => {
         try {
+            setLoaderElementWidth(event.target.clientWidth)
+            setLoaderElementHeight(event.target.clientHeight)
+            setIsLoading(true)
+
             const requestBody = new FormData()
             requestBody.append("plant", selectedPlant)
             requestBody.append("image", image)
@@ -130,14 +138,14 @@ function DetectContainer(){
                 })
 
                 setResult(data.data)
-                console.log(data)
             } else {
                 const { data } = await axios.post(`${MLAPIEndpoint}/api/public-predict`, requestBody)
 
                 setResult(data.data)
-                console.log(data.data)
             }
+            setIsLoading(false)
         } catch(error){
+            setIsLoading(false)
             console.log(error)
         }
     }
@@ -164,7 +172,9 @@ function DetectContainer(){
                         <img src={imagePreview} alt="Preview" className="max-w-full max-h-full object-contain" />
                         <div className="flex justify-end gap-2 p-2 bg-white">
                             <button type="button" onClick={clearImageInput} className="py-2 px-6 rounded-full bg-[#ff3d3d] text-white">Hapus</button>
-                            <button type="submit" onClick={detectHandler} className="py-2 px-6 rounded-full bg-custom-green text-white">Deteksi</button>
+                            {isLoading ? 
+                            <Loader /> :
+                            <button type="submit" onClick={detectHandler} className="py-2 px-6 rounded-full bg-custom-green text-white">Deteksi</button>}
                         </div>
                     </article>
                 ) : (

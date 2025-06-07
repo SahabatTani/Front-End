@@ -85,7 +85,7 @@ function ThreadContainer(){
 
     return (
         <section className="flex flex-col px-[10vw] mt-4 mx-auto gap-2 mobile:px-4 tablet:px-[5vw]">
-            {thread === null && <Loader className={"self-center"} />}
+            {thread === null && <Loader className={"self-center w-8 h-8"} />}
             {thread &&
             <>
             <article className="account flex items-center gap-2">
@@ -94,7 +94,7 @@ function ThreadContainer(){
                     <p className="font-bold">{thread.fullname}</p>
                     <p className="text-sm">{DateParser(thread.created_at)}</p>
                 </div>
-                {user.username === thread.username &&
+                {user?.username === thread.username &&
                 <div className="relative" ref={menuRef}>
                     <button type="button" className="rounded-full hover:bg-black/10 p-1" onClick={() => setShowMenu(!showMenu)}>
                         <IconDotsVertical stroke={1.5} width={16} height={16} />
@@ -120,11 +120,11 @@ function ThreadContainer(){
                     {thread.comments.length > 0 &&
                     <article className="comments">
                     {thread.comments.map((comment, index) => (
-                        <Comment key={index} comment={comment} selectedCommentMenu={selectedCommentMenu} setSelectedCommentMenu={setSelectedCommentMenu} setPopupImageUrl={setPopupImageUrl} setThread={setThread} />
+                        <Comment key={index} comments={thread.comments} index={index} comment={comment} selectedCommentMenu={selectedCommentMenu} setSelectedCommentMenu={setSelectedCommentMenu} setPopupImageUrl={setPopupImageUrl} setThread={setThread} setThreads={setThreads} />
                     ))}
                     </article>}
                 </article>
-                <CommentForm threadId={threadId} setThread={setThread} />
+                <CommentForm thread={thread} setThread={setThread} setThreads={setThreads} />
             </article>
             </>}
             {popupImageUrl &&
@@ -135,7 +135,7 @@ function ThreadContainer(){
     )
 }
 
-function Comment({ comment, selectedCommentMenu, setSelectedCommentMenu, setPopupImageUrl, setThread }) {
+function Comment({ comments, index, comment, selectedCommentMenu, setSelectedCommentMenu, setPopupImageUrl, setThread, setThreads }) {
     const menuRef = useRef(null)
     const { user } = useContext(AuthContext)
 
@@ -167,20 +167,24 @@ function Comment({ comment, selectedCommentMenu, setSelectedCommentMenu, setPopu
             })
 
             setThread(thread => ({...thread, comments: thread.comments.filter(c => c.id !== comment.id)}))
+            setThreads(threads => threads.map(thread => {
+                if (thread.id === thread.id) return {...thread, total_comments: parseInt(thread.total_comments) - 1}
+                return thread
+            }))
         } catch(error){
             console.log(error)
         }
     }
 
     return (
-        <article className="comment flex flex-col gap-2 p-2 border-b border-[#ccc]">
+        <article className={`comment flex flex-col gap-2 p-2 ${index < comments.length - 1 ? "border-b border-[#ccc]" : ""}`}>
             <article className="flex items-center gap-2">
                 <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${comment.fullname}`} className="rounded-full w-6 h-6" />
                 <article className="flex flex-col w-full">
                     <p className="font-bold text-sm">{comment.fullname}</p>
                     <p className="text-xs">{DateParser(comment.created_at)}</p>
                 </article>
-                {user.username === comment.username &&
+                {user?.username === comment.username &&
                 <div className="relative" ref={menuRef}>
                     <button type="button" className="rounded-full hover:bg-black/10 p-1" onClick={() => setSelectedCommentMenu(selectedCommentMenu === comment.id ? "" : comment.id)}>
                         <IconDotsVertical stroke={1.5} width={16} height={16} />
@@ -206,7 +210,7 @@ function Comment({ comment, selectedCommentMenu, setSelectedCommentMenu, setPopu
     )
 }
 
-function CommentForm({ threadId, setThread }){
+function CommentForm({thread, setThread, setThreads }){
     const { user } = useContext(AuthContext)
     const commentContentRef = useRef()
     const [image, setImage] = useState(null)
@@ -247,7 +251,7 @@ function CommentForm({ threadId, setThread }){
             }
 
             const APIEndpoint = import.meta.env.VITE_API_ENDPOINT
-            const { data } = await axios.post(`${APIEndpoint}/comments/${threadId}`, requestBody, {
+            const { data } = await axios.post(`${APIEndpoint}/comments/${thread.id}`, requestBody, {
                 headers: {
                     "Authorization": "Bearer " + token,
                     "Content-Type": "multipart/form-data"
@@ -257,12 +261,20 @@ function CommentForm({ threadId, setThread }){
             const comment = {
                 id: data.data.commentId,
                 fullname: user.fullname,
+                username: user.username,
                 content: commentContentRef.current.value,
                 image_url: imagePreview,
                 created_at: new Date().toISOString()
             }
             setThread(thread => ({...thread, comments: [comment, ...thread.comments]}))
+            setThreads(threads => threads.map(thread => {
+                if (thread.id === thread.id) return {...thread, total_comments: parseInt(thread.total_comments) + 1}
+                return thread
+            }))
 
+            commentContentRef.current.value = ""
+            setImage(null)
+            setImagePreview(null)
             toast.success("Komentar berhasil ditambahkan")
             setIsLoading(false)
         } catch(error){

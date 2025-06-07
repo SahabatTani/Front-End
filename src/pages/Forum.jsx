@@ -35,7 +35,7 @@ function ForumContainer({ onOpenModal }){
 
     return (
         <section className="forum-container flex flex-col items-center gap-8 px-[10vw] mt-4 mobile:px-4 tablet:px-[5vw]">
-            {threads === null && <Loader />}
+            {threads === null && <Loader className={"w-8 h-8"} />}
             {threads &&
             <section className="flex gap-4 w-full mobile:flex-col">
                 <article className="flex h-fit items-center gap-2 p-2 rounded-full bg-white border border-[#ccc] focus-within:border-transparent focus-within:outline-2 focus-within:outline-custom-green w-1/4 mobile:w-full">
@@ -50,9 +50,10 @@ function ForumContainer({ onOpenModal }){
                     </button>}
                     {isLogin === false &&
                     <div className="p-2 border border-[#ccc] rounded-full">Silahkan masuk untuk membuat diskusi baru</div>}
+                    {threads?.length > 0 &&
                     <section className="flex flex-col border border-[#ccc] rounded-lg">
-                    {threads && threads.map((thread, index) => (
-                        <Link to={`/forum/${thread.id}`} className="flex p-2 gap-2 border-b border-[#ccc]" key={index}>
+                    {threads.map((thread, index) => (
+                        <Link to={`/forum/${thread.id}`} className={`flex p-2 gap-2 ${index < threads.length - 1 ? "border-b border-[#ccc]" : ""}`} key={index}>
                             <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${thread.fullname}`} alt="User" className="rounded-full w-6 h-6" />
                             <div className="flex flex-col w-full">
                                 <div className="font-bold">{thread.fullname}</div>
@@ -64,7 +65,7 @@ function ForumContainer({ onOpenModal }){
                             </div>
                         </Link>
                     ))}
-                    </section>
+                    </section>}
                 </article>
             </section>}
         </section>

@@ -123,7 +123,9 @@ function UserMap() {
                     </Marker>
                 ))}
             </MapContainer>}
-            <article></article>
+            <article>
+                <p className="text-justify">Peta ini menampilkan lokasi pengguna yang telah menggunakan layanan deteksi penyakit tanaman pada website ini. Setiap titik pada peta merepresentasikan laporan deteksi yang telah dilakukan, sehingga memungkinkan pengguna dan peneliti untuk melihat sebaran geografis penyakit tanaman secara real-time. Dengan visualisasi ini, pengguna dapat mengetahui daerah-daerah yang rawan terhadap serangan penyakit tertentu, serta membantu dalam pengambilan keputusan untuk pencegahan dan penanggulangan lebih dini.</p>
+            </article>
         </section>
     );
 }

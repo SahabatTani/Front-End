@@ -35,7 +35,7 @@ function HistoryContainer(){
                     <img src={history.image_url} alt="Riwayat" className="w-full aspect-square object-cover" />
                     <div className="flex flex-col p-4 gap-4">
                         <div>
-                            <p>{history.prediction.plant}</p>
+                            <p>{history.plant}</p>
                             <p className="font-bold">{history.prediction.status}</p>
                         </div>
                         <p className="self-end">{DateParser(history.created_at)}</p>
@@ -58,7 +58,7 @@ function HistoryPopup({ history, setSelectedHistory }){
                 </article>
                 <article className="w-3/5 flex overflow-y-auto mobile:w-full">
                     <article className="flex flex-col">
-                        <p className="font-bold">{history.prediction.plant}</p>
+                        <p className="font-bold">{history.plant}</p>
                         <p>{history.prediction.status}</p>
                         {history.prediction.status !== "Sehat" && 
                         <>
