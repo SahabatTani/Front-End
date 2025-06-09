@@ -224,6 +224,16 @@ function CommentForm({thread, setThread, setThreads }){
     const imageInputHandler = (event) => {
         const file = event.target.files[0]
         if (file) {
+            const maxSize = 1 * 1024 * 1024
+            if (file.size > maxSize) {
+                toast.warn("Ukuran gambar tidak boleh lebih dari 1MB.")
+                setImage(null)
+                setImagePreview(null)
+                event.target.value = ""
+
+                return
+            }
+            
             setImage(file)
             const previewUrl = URL.createObjectURL(file)
             setImagePreview(previewUrl)

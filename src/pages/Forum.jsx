@@ -93,6 +93,16 @@ function NewDiscussionModal({ onClose }) {
     const imageInputHandler = (event) => {
         const file = event.target.files[0]
         if (file) {
+            const maxSize = 1 * 1024 * 1024
+            if (file.size > maxSize) {
+                toast.warn("Ukuran gambar tidak boleh lebih dari 1MB.")
+                setImage(null)
+                setImagePreview(null)
+                event.target.value = ""
+
+                return
+            }
+
             setImage(file)
             const previewUrl = URL.createObjectURL(file)
             setImagePreview(previewUrl)
@@ -113,7 +123,7 @@ function NewDiscussionModal({ onClose }) {
             const requestBody = new FormData()
             requestBody.append("title", titleRef.current.value)
             requestBody.append("content", contentRef.current.value)
-            if (image) {
+            if (image){
                 requestBody.append("file", image)
             }
             if (requestBody.get("title") === "" || requestBody.get("content") === ""){
