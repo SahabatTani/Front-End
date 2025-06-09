@@ -181,7 +181,7 @@ function NewDiscussionModal({ onClose }) {
                             <img src={imagePreview} alt="Pratinjau" className="w-full h-full object-cover rounded-lg border border-[#ccc]" />
                         </div>}
                     </div>
-                    <div className="flex justify-end gap-2 p-4">
+                    <div className="flex justify-end gap-2 p-2">
                         <button type="button" onClick={onClose} className="py-2 px-6 rounded-full bg-[#ff3d3d] text-white">Batal</button>
                         {isLoading ?
                         <Loader className={"bg-custom-green"} /> :

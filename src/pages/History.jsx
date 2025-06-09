@@ -96,7 +96,7 @@ function HistoryPopup({ history, setSelectedHistory }){
     return (
         <section className="history-popup fixed inset-0 bg-black/50 flex items-center justify-center z-[1200] mobile:px-4 tablet:px-[5vw]" onClick={() => setSelectedHistory(null)}>
             <article className="bg-white relative w-[75vw] h-[75vh] flex gap-2 p-2 rounded-lg shadow-lg mobile:w-full mobile:flex-col tablet:w-full" onClick={(e) => e.stopPropagation()}>
-                <article className="w-2/5 flex mobile:w-full">
+                <article className="w-2/5 flex mobile:w-full overflow-y-auto mobile:overflow-y-visible">
                     <img src={history.image_url} alt="Riwayat" className="w-full h-fit" />
                 </article>
                 <article className="w-3/5 flex overflow-y-auto mobile:w-full">

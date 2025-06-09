@@ -1,4 +1,4 @@
-import { IconArrowNarrowRight, IconCircleCheck, IconClipboard, IconObjectScan, IconPhoto, IconPhotoUp } from "@tabler/icons-react";
+import { IconArrowNarrowDown, IconArrowNarrowRight, IconCircleCheck, IconClipboard, IconObjectScan, IconPhoto, IconPhotoUp } from "@tabler/icons-react";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
@@ -46,14 +46,14 @@ function DetectSteps(){
     return (
         <section className="flex flex-col gap-8 items-center mt-4 mx-auto px-[10vw]">
             <div className="font-bold text-xl">Langkah penggunaan</div>
-            <section className="flex items-center gap-4  justify-center">
+            <section className="flex items-center gap-4 justify-center mobile:flex-col">
             {steps.map((step, index) => (
                 <React.Fragment key={index}>
                     <article className="flex flex-col items-center p-2 rounded-lg bg-white shadow-lg">
                         <div className="flex p-2 w-fit rounded-full bg-custom-green text-white">{step.svg}</div>
                         <p className="text-center">{step.label}</p>
                     </article>
-                    {index < steps.length - 1 && <div className="flex"><IconArrowNarrowRight stroke={1.5} /></div>}
+                    {index < steps.length - 1 && <div className="flex"><IconArrowNarrowRight stroke={1.5} className="mobile:hidden" /><IconArrowNarrowDown stroke={1.5} className="hidden mobile:block" /></div>}
                 </React.Fragment>
             ))}    
             </section>
@@ -165,7 +165,7 @@ function DetectContainer(){
 
     return (
         <section className="flex flex-col gap-8 items-center mt-8 mx-auto px-[10vw] py-8 justify-center mobile:px-4 tablet:px-[5vw]">
-            <section className="image-inputs flex items-center gap-4">
+            <section className="image-inputs grid grid-cols-4 gap-4 mobile:grid-cols-2">
             {imageInputs.map((item, index) => (
                 <label key={index} className="flex flex-col items-center justify-center p-2 rounded-lg bg-white shadow-lg cursor-pointer min-w-32 min-h-32 relative">
                     <img src={item.img} alt={item.name} className="w-12 h-12" />
@@ -179,7 +179,7 @@ function DetectContainer(){
                 </label>
             ))}
             </section>
-            <section className="preview flex justify-center items-center mx-auto w-[50vw]">
+            <section className="preview flex justify-center items-center mx-auto w-[50vw] mobile:w-full">
                 {imagePreview ? (
                     <article className="flex flex-col rounded-lg overflow-hidden gap-1">
                         <img src={imagePreview} alt="Preview" className="max-w-full max-h-full object-contain" />
