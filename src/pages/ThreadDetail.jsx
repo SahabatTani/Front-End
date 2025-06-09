@@ -221,6 +221,7 @@ function CommentForm({thread, setThread, setThreads }){
     const [isLoading, setIsLoading] = useState(false)
     const { setLoaderElementWidth, setLoaderElementHeight } = useContext(LoaderContext)
 
+    
     const imageInputHandler = (event) => {
         const file = event.target.files[0]
         if (file) {

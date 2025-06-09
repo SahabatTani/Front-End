@@ -119,7 +119,7 @@ function UserMap() {
                     <Marker key={history.id} position={[history.latitude, history.longitude]}>
                         <Popup>
                             <strong>{history.user.fullname}</strong>
-                            <p>{history.prediction.plant}</p>
+                            <p>{history.plant}</p>
                             <p>{history.prediction.status}</p>
                         </Popup>
                     </Marker>
