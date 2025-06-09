@@ -47,7 +47,7 @@ export default function Login(){
             setIsLoading(false)
         } catch(error){
             setIsLoading(false)
-            toast.error(error.response.data.message)
+            toast.error("Gagal masuk")
             console.log(error)
         }
     }

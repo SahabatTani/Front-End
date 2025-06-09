@@ -17,7 +17,10 @@ export default function Footer(){
     return (
         <footer className="flex flex-col px-[10vw] py-8 mt-8 bg-custom-green text-white mobile:px-4 tablet:px-[5vw]">
             <article className="flex justify-between">
-                <img src={logoWhite} alt="SahabatTani" className="w-12 h-12" />
+                <article className="flex items-center gap-2">
+                    <img src={logoWhite} alt="SahabatTani" className="w-12 h-12" />
+                    <span className="font-bold text-xl mobile:text-base">SahabatTani</span>
+                </article>
                 <div className="flex gap-4 mobile:flex-col">
                 {contacts.map((contact, index) => (
                     <Link className="flex hover:underline" key={index}>

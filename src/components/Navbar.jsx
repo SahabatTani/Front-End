@@ -59,8 +59,9 @@ export default function Navbar(){
 
     return (
         <nav className="bg-white px-[10vw] py-4 flex items-center justify-between border border-b border-[#ccc] fixed top-0 left-0 w-full z-[1200] mobile:px-4 tablet:px-[5vw]">
-            <Link to={"/"} className="logo">
+            <Link to={"/"} className="logo flex items-center gap-2">
                 <img src={logoGreen} alt="SahabatTani" className="w-12 h-12" />
+                <span className="font-bold text-xl mobile:text-base">SahabatTani</span>
             </Link>
             <div className="flex items-center gap-8 mobile:gap-4">
                 <div className={`links flex items-center gap-8 mobile:absolute mobile:top-0 mobile:bg-white mobile:flex-col mobile:h-screen mobile:items-end mobile:w-3/5 mobile:pt-6 mobile:pr-4 mobile:transition-all mobile:duration-300 mobile:z-50 ${showMobileMenu ? "mobile:right-0" : "mobile:-right-full"}`}>

@@ -2,6 +2,7 @@ import { IconArrowNarrowDown, IconArrowNarrowRight, IconCircleCheck, IconClipboa
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import cassava from "../assets/cassava.png";
 import corn from "../assets/corn.png";
 import mango from "../assets/mango.png";
@@ -160,6 +161,7 @@ function DetectContainer(){
         } catch(error){
             setIsLoading(false)
             console.log(error)
+            toast.error("Gagal melakukan prediksi")
         }
     }
 

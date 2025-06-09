@@ -11,27 +11,13 @@ import { AuthContext } from "../contexts/AuthContext";
 import { LoaderContext } from "../contexts/LoaderContext";
 import { ThreadContext } from "../contexts/ThreadContext";
 import { DateParser } from "../utils/DateParser";
+import NotFound from "./NotFound";
 
 export default function ThreadDetail(){
     document.title = "SahabatTani | Forum diskusi"
 
-    return (
-        <>
-        <Navbar />
-        <Header title={"Forum diskusi"} />
-        <ThreadContainer />
-        <Footer />
-        </>
-    )
-}
-
-function ThreadContainer(){
     const { threadId } = useParams()
-    const { user } = useContext(AuthContext)
-    const { setThreads } = useContext(ThreadContext)
     const [thread, setThread] = useState(null)
-    const [popupImageUrl, setPopupImageUrl] = useState(null)
-
     useEffect(() => {
         const getThreadHandler = async() => {
             try {
@@ -40,11 +26,31 @@ function ThreadContainer(){
                 setThread(data.data.thread)
             } catch(error){
                 console.log(error)
+                setThread(undefined)
             }
         }
 
         getThreadHandler()
     }, [])
+
+    if (thread === undefined) return <NotFound />
+    if (thread !== null && thread !== undefined){
+        return (
+            <>
+            <Navbar />
+            <Header title={"Forum diskusi"} />
+            <ThreadContainer thread={thread} setThread={setThread} />
+            <Footer />
+            </>
+        )
+    }
+    return null
+}
+
+function ThreadContainer({ thread, setThread }){
+    const { user } = useContext(AuthContext)
+    const { setThreads } = useContext(ThreadContext)
+    const [popupImageUrl, setPopupImageUrl] = useState(null)
 
     const [selectedCommentMenu, setSelectedCommentMenu] = useState("")
 
@@ -64,6 +70,7 @@ function ThreadContainer(){
             navigate("/forum")
         } catch(error){
             console.log(error)
+            toast.error("Gagal menghapus diskusi")
         }
     } 
 
@@ -86,9 +93,7 @@ function ThreadContainer(){
 
     return (
         <section className="flex flex-col px-[10vw] mt-4 mx-auto gap-2 mobile:px-4 tablet:px-[5vw]">
-            {thread === null && <Loader className={"self-center w-8 h-8 bg-custom-green"} />}
-            {thread &&
-            <>
+            {/* {thread === null && <Loader className={"self-center !w-8 !h-8 bg-custom-green"} />} */}
             <article className="account flex items-center gap-2">
                 <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${thread.fullname}`} alt="User" className="rounded-full w-8 h-8" />
                 <div className="flex flex-col w-full h-full">
@@ -98,12 +103,12 @@ function ThreadContainer(){
                 {user?.username === thread.username &&
                 <div className="relative" ref={menuRef}>
                     <button type="button" className="rounded-full hover:bg-black/10 p-1" onClick={() => setShowMenu(!showMenu)}>
-                        <IconDotsVertical stroke={1.5} width={16} height={16} />
+                        <IconDotsVertical stroke={1.5} width={20} height={20} />
                     </button>
                     <div className={`menu absolute top-full right-0 py-1 bg-white shadow-lg rounded-lg ${showMenu ? "flex" : "hidden"} flex-col overflow-hidden`}>
                         <button type="button" className="flex items-center hover:bg-black/10 p-1 text-red-500" onClick={deleteDiscussionHandler}>
                             <IconTrash stroke={1.5} width={20} height={20} />
-                            <span className="text-sm">Hapus</span>
+                            <span className="">Hapus</span>
                         </button>
                     </div>
                 </div>}
@@ -127,7 +132,6 @@ function ThreadContainer(){
                 </article>
                 <CommentForm thread={thread} setThread={setThread} setThreads={setThreads} />
             </article>
-            </>}
             {popupImageUrl &&
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1200] px-[10vw] mobile:px-4 tablet:px-[5vw]" onClick={() => setPopupImageUrl(null)}>
                 <img src={popupImageUrl} alt="Popup" className="max-h-[75vh] rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()} />
@@ -174,6 +178,7 @@ function Comment({ comments, index, comment, selectedCommentMenu, setSelectedCom
             }))
         } catch(error){
             console.log(error)
+            toast.error("Gagal menghapus komentar")
         }
     }
 
@@ -248,7 +253,6 @@ function CommentForm({thread, setThread, setThreads }){
             const btnElement = event.currentTarget.querySelector("button[type='submit']")
             setLoaderElementWidth(btnElement.clientWidth)
             setLoaderElementHeight(btnElement.clientHeight)
-            setIsLoading(true)
 
             const token = localStorage.getItem("token")
             if (!token) return

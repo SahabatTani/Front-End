@@ -113,7 +113,7 @@ function UserMap() {
         <section className="map px-[10vw] flex flex-col py-12 gap-8 mobile:px-4 tablet:px-[5vw]">
             <p className="text-2xl"><span className="font-bold">Peta</span> persebaran</p>
             {historiesMap &&
-            <MapContainer center={[-7.7956, 110.3695]} zoom={10} style={{ height: '500px', width: '100%' }}>
+            <MapContainer center={[-7.7956, 110.3695]} zoom={12} style={{ height: '500px', width: '100%' }}>
                 <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
                 {historiesMap.map(history => (
                     <Marker key={history.id} position={[history.latitude, history.longitude]}>

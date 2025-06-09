@@ -57,7 +57,7 @@ export default function Register(){
             navigate("/detect")
             setIsLoading(false)
         } catch(error){
-            toast.error(error.response.data.message)
+            toast.error("Gagal daftar")
             console.log(error)
             setIsLoading(false)
         }

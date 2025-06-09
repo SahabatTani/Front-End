@@ -2,6 +2,7 @@ import { IconTrash, IconX } from "@tabler/icons-react"
 import axios from "axios"
 import { useContext, useState } from "react"
 import { Link } from "react-router-dom"
+import { toast } from "react-toastify"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
 import Loader from "../components/Loader"
@@ -28,24 +29,16 @@ function HistoryContainer() {
     const [selectedHistory, setSelectedHistory] = useState(null)
 
     return (
-        <section className="history-container flex flex-col items-center gap-8 mt-4 px-[10vw] mobile:px-4 tablet:px-[5vw]">
-            {histories === null && <Loader className={"bg-custom-green"} />}
+        <section className={`history-container flex flex-col items-center gap-8 mt-4 px-[10vw] mobile:px-4 tablet:px-[5vw] ${histories === null || histories.length === 0 ? "mb-60" : ""}`}>
+            {histories === null && <Loader className={"!w-8 !h-8 bg-custom-green"} />}
             {histories !== null && histories.length === 0 && (
                 <p className="text-2xl font-bold text-center">Riwayat masih kosong</p>
             )}
             {histories !== null && histories.length > 0 && (
-                <section className="grid grid-cols-4 gap-8 mobile:grid-cols-1 tablet:grid-cols-3">
+                <section className="w-full grid grid-cols-4 gap-8 mobile:grid-cols-1 tablet:grid-cols-3">
                     {histories.map((history, index) => (
-                        <article
-                            className="flex flex-col rounded-lg bg-white overflow-hidden cursor-pointer"
-                            key={index}
-                            onClick={() => setSelectedHistory(history)}
-                        >
-                            <img
-                                src={history.image_url}
-                                alt="Riwayat"
-                                className="w-full aspect-square object-cover"
-                            />
+                        <article className="flex flex-col rounded-lg bg-white overflow-hidden cursor-pointer shadow-lg" key={index} onClick={() => setSelectedHistory(history)}>
+                            <img src={history.image_url} alt="Riwayat" className="w-full aspect-square object-cover" />
                             <div className="flex flex-col p-4 gap-4">
                                 <div>
                                     <p>{history.plant}</p>
@@ -90,6 +83,7 @@ function HistoryPopup({ history, setSelectedHistory }){
         } catch(error){
             setIsLoading(false)
             console.log(error)
+            toast.error("Gagal menghapus riwayat")
         }
     }
 
