@@ -43,7 +43,7 @@ button{
 }
 
 .header{
-    background-image: url("./assets/header-image.jpeg");
+    background-image: url("./assets/header-image.jpg");
     background-position: center;
     background-size: cover;
 }
