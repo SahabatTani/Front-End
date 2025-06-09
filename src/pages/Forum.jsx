@@ -33,6 +33,12 @@ function ForumContainer({ onOpenModal }){
     const { isLogin, user } = useContext(AuthContext)
     const { threads } = useContext(ThreadContext)
 
+    const [searchKeyword, setSearchKeyword] = useState("")
+    const filteredThreads = threads?.filter((thread) =>
+        thread.title.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+        thread.fullname.toLowerCase().includes(searchKeyword.toLowerCase())
+    )
+
     return (
         <section className="forum-container flex flex-col items-center gap-8 px-[10vw] mt-4 mobile:px-4 tablet:px-[5vw]">
             {threads === null && <Loader className={"w-8 h-8"} />}
@@ -40,7 +46,7 @@ function ForumContainer({ onOpenModal }){
             <section className="flex gap-4 w-full mobile:flex-col">
                 <article className="flex h-fit items-center gap-2 p-2 rounded-full bg-white border border-[#ccc] focus-within:border-transparent focus-within:outline-2 focus-within:outline-custom-green w-1/4 mobile:w-full">
                     <IconSearch stroke={1.5} />
-                    <input type="search" placeholder="Cari" className="outline-none" />
+                    <input type="search" placeholder="Cari" className="outline-none" onChange={(e) => setSearchKeyword(e.target.value)} />
                 </article>
                 <article className="flex flex-col gap-4 w-3/4 mobile:w-full">
                     {isLogin === true &&
@@ -50,10 +56,10 @@ function ForumContainer({ onOpenModal }){
                     </button>}
                     {isLogin === false &&
                     <div className="p-2 border border-[#ccc] rounded-full">Silahkan masuk untuk membuat diskusi baru</div>}
-                    {threads?.length > 0 &&
+                    {filteredThreads?.length > 0 &&
                     <section className="flex flex-col border border-[#ccc] rounded-lg">
-                    {threads.map((thread, index) => (
-                        <Link to={`/forum/${thread.id}`} className={`flex p-2 gap-2 ${index < threads.length - 1 ? "border-b border-[#ccc]" : ""}`} key={index}>
+                    {filteredThreads.map((thread, index) => (
+                        <Link to={`/forum/${thread.id}`} className={`flex p-2 gap-2 ${index < filteredThreads.length - 1 ? "border-b border-[#ccc]" : ""}`} key={index}>
                             <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${thread.fullname}`} alt="User" className="rounded-full w-6 h-6" />
                             <div className="flex flex-col w-full">
                                 <div className="font-bold">{thread.fullname}</div>
@@ -98,9 +104,9 @@ function NewDiscussionModal({ onClose }) {
             event.preventDefault()
 
             const btnElement = event.currentTarget.querySelector("button[type='submit']")
-            setIsLoading(true)
             setLoaderElementWidth(btnElement.clientWidth)
             setLoaderElementHeight(btnElement.clientHeight)
+            setIsLoading(true)
 
             const token = localStorage.getItem("token")
 
@@ -168,7 +174,7 @@ function NewDiscussionModal({ onClose }) {
                     <div className="flex justify-end gap-2 p-4">
                         <button type="button" onClick={onClose} className="py-2 px-6 rounded-full bg-[#ff3d3d] text-white">Batal</button>
                         {isLoading ?
-                        <Loader /> :
+                        <Loader className={"bg-custom-green"} /> :
                         <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white">Kirim</button>}
                     </div>
                 </form>

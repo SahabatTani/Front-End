@@ -24,10 +24,10 @@ export default function Login(){
         try {
             event.preventDefault()
 
-            setIsLoading(true)
             const btnElement = event.currentTarget.querySelector('button[type="submit"]')
             setLoaderElementWidth(btnElement.clientWidth)
             setLoaderElementHeight(btnElement.clientHeight)
+            setIsLoading(true)
 
             const requestBody = {
                 identifier: identifierRef.current.value,
@@ -68,7 +68,7 @@ export default function Login(){
                     </div>
                     <span>Belum punya akun? <Link to={"/register"} className="hover:underline">Daftar</Link></span>
                     {isLoading ? 
-                    <Loader /> :
+                    <Loader className={"bg-custom-green"} /> :
                     <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white cursor-pointer">Masuk</button>}
                 </div>
             </form>

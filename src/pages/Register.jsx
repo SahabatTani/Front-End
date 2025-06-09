@@ -1,11 +1,11 @@
-import { useContext, useRef, useState } from "react"
-import logoGreen from "../assets/logo-green.png"
-import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
+import { useContext, useRef, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { LoaderContext } from "../contexts/LoaderContext"
+import logoGreen from "../assets/logo-green.png"
 import Loader from "../components/Loader"
 import { AuthContext } from "../contexts/AuthContext"
+import { LoaderContext } from "../contexts/LoaderContext"
 
 export default function Register(){
     document.title = "SahabatTani | Daftar"
@@ -28,9 +28,9 @@ export default function Register(){
             event.preventDefault()
 
             const btnElement = event.currentTarget.querySelector("button[type='submit']")
-            setIsLoading(true)
             setLoaderElementWidth(btnElement.clientWidth)
             setLoaderElementHeight(btnElement.clientHeight)
+            setIsLoading(true)
             
             const requestBody = {
                 username: usernameRef.current.value, 
@@ -91,7 +91,7 @@ export default function Register(){
                     </div>
                     <span>Sudah punya akun? <Link to={"/login"} className="hover:underline">Masuk</Link></span>
                     {isLoading ?
-                    <Loader /> :
+                    <Loader className={"bg-custom-green"} /> :
                     <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white">Daftar</button>}
                 </div>
             </form>

@@ -85,7 +85,7 @@ function ThreadContainer(){
 
     return (
         <section className="flex flex-col px-[10vw] mt-4 mx-auto gap-2 mobile:px-4 tablet:px-[5vw]">
-            {thread === null && <Loader className={"self-center w-8 h-8"} />}
+            {thread === null && <Loader className={"self-center w-8 h-8 bg-custom-green"} />}
             {thread &&
             <>
             <article className="account flex items-center gap-2">
@@ -233,9 +233,9 @@ function CommentForm({thread, setThread, setThreads }){
             event.preventDefault()
 
             const btnElement = event.currentTarget.querySelector("button[type='submit']")
-            setIsLoading(true)
             setLoaderElementWidth(btnElement.clientWidth)
             setLoaderElementHeight(btnElement.clientHeight)
+            setIsLoading(true)
 
             const token = localStorage.getItem("token")
             if (!token) return
@@ -303,7 +303,7 @@ function CommentForm({thread, setThread, setThreads }){
                 </div>}
             </div>
             {isLoading ?
-            <Loader className={"self-end my-2 mr-2"} /> :
+            <Loader className={"self-end my-2 mr-2 bg-custom-green"} /> :
             <button type="submit" className="py-2 px-6 my-2 mr-2 rounded-full bg-custom-green text-white self-end w-fit">Kirim</button>}
         </form>
     )

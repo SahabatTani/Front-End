@@ -173,7 +173,7 @@ function DetectContainer(){
                         <div className="flex justify-end gap-2 p-2 bg-white">
                             <button type="button" onClick={clearImageInput} className="py-2 px-6 rounded-full bg-[#ff3d3d] text-white">Hapus</button>
                             {isLoading ? 
-                            <Loader /> :
+                            <Loader className={"bg-custom-green"} /> :
                             <button type="submit" onClick={detectHandler} className="py-2 px-6 rounded-full bg-custom-green text-white">Deteksi</button>}
                         </div>
                     </article>

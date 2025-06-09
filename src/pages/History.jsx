@@ -1,10 +1,12 @@
-import { IconX } from "@tabler/icons-react"
+import { IconTrash, IconX } from "@tabler/icons-react"
+import axios from "axios"
 import { useContext, useState } from "react"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
 import Loader from "../components/Loader"
 import Navbar from "../components/Navbar"
 import { HistoryContext } from "../contexts/HistoryContext"
+import { LoaderContext } from "../contexts/LoaderContext"
 import { DateParser } from "../utils/DateParser"
 
 export default function History(){
@@ -20,36 +22,76 @@ export default function History(){
     )
 }
 
-function HistoryContainer(){
-
+function HistoryContainer() {
     const { histories } = useContext(HistoryContext)
     const [selectedHistory, setSelectedHistory] = useState(null)
 
     return (
         <section className="history-container flex flex-col items-center gap-8 mt-4 px-[10vw] mobile:px-4 tablet:px-[5vw]">
-            {histories === null && <Loader />}
-            {histories && 
-            <section className="grid grid-cols-4 gap-8 mobile:grid-cols-1 tablet:grid-cols-3">
-            {histories.map((history, index) => (
-                <article className="flex flex-col rounded-lg bg-white overflow-hidden cursor-pointer" key={index} onClick={() => setSelectedHistory(history)}>
-                    <img src={history.image_url} alt="Riwayat" className="w-full aspect-square object-cover" />
-                    <div className="flex flex-col p-4 gap-4">
-                        <div>
-                            <p>{history.plant}</p>
-                            <p className="font-bold">{history.prediction.status}</p>
-                        </div>
-                        <p className="self-end">{DateParser(history.created_at)}</p>
-                    </div>
-                </article>
-            ))}
-            </section>}
-            {selectedHistory &&
-            <HistoryPopup history={selectedHistory} setSelectedHistory={setSelectedHistory} />}
+            {histories === null && <Loader className={"bg-custom-green"} />}
+            {histories !== null && histories.length === 0 && (
+                <p className="text-2xl font-bold text-center">Riwayat masih kosong</p>
+            )}
+            {histories !== null && histories.length > 0 && (
+                <section className="grid grid-cols-4 gap-8 mobile:grid-cols-1 tablet:grid-cols-3">
+                    {histories.map((history, index) => (
+                        <article
+                            className="flex flex-col rounded-lg bg-white overflow-hidden cursor-pointer"
+                            key={index}
+                            onClick={() => setSelectedHistory(history)}
+                        >
+                            <img
+                                src={history.image_url}
+                                alt="Riwayat"
+                                className="w-full aspect-square object-cover"
+                            />
+                            <div className="flex flex-col p-4 gap-4">
+                                <div>
+                                    <p>{history.plant}</p>
+                                    <p className="font-bold">{history.prediction.status}</p>
+                                </div>
+                                <p className="self-end">{DateParser(history.created_at)}</p>
+                            </div>
+                        </article>
+                    ))}
+                </section>
+            )}
+            {selectedHistory && (
+                <HistoryPopup history={selectedHistory} setSelectedHistory={setSelectedHistory} />
+            )}
         </section>
     )
 }
 
 function HistoryPopup({ history, setSelectedHistory }){
+    const { setHistories } = useContext(HistoryContext)
+    const [isLoading, setIsLoading] = useState(false)
+    const { setLoaderElementWidth, setLoaderElementHeight } = useContext(LoaderContext)
+
+    const deleteHistoryHandler = async(event) => {
+        try {
+            setLoaderElementWidth(event.currentTarget.clientWidth)
+            setLoaderElementHeight(event.currentTarget.clientHeight)
+            setIsLoading(true)
+
+            const token = localStorage.getItem("token")
+            const MLAPIEndpoint = import.meta.env.VITE_ML_API_ENDPOINT
+            
+            await axios.delete(`${MLAPIEndpoint}/api/histories/${history.id}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            
+            setHistories(histories => histories.filter(h => h.id !== history.id))
+            setIsLoading(false)
+            setSelectedHistory(null)
+        } catch(error){
+            setIsLoading(false)
+            console.log(error)
+        }
+    }
+
     return (
         <section className="history-popup fixed inset-0 bg-black/50 flex items-center justify-center z-[1200] mobile:px-4 tablet:px-[5vw]" onClick={() => setSelectedHistory(null)}>
             <article className="bg-white relative w-[75vw] h-[75vh] flex gap-2 p-2 rounded-lg shadow-lg mobile:w-full mobile:flex-col tablet:w-full" onClick={(e) => e.stopPropagation()}>
@@ -60,6 +102,7 @@ function HistoryPopup({ history, setSelectedHistory }){
                     <article className="flex flex-col">
                         <p className="font-bold">{history.plant}</p>
                         <p>{history.prediction.status}</p>
+                        <p>{DateParser(history.created_at)}</p>
                         {history.prediction.status !== "Sehat" && 
                         <>
                         <article className="mt-4">
@@ -75,9 +118,17 @@ function HistoryPopup({ history, setSelectedHistory }){
                             <p className="text-justify">{history.prediction.solution}</p>
                         </article>    
                         </>}
+                        <article className="mt-2">
+                            {isLoading ?
+                            <Loader className={"bg-[#ff3d3d]"} /> :
+                            <button type="button" className="flex items-center gap-1 rounded-full bg-[#ff3d3d] p-2 w-fit text-white" onClick={deleteHistoryHandler}>
+                                <IconTrash stroke={1.5} />
+                                <span>Hapus riwayat</span>
+                            </button>}
+                        </article>
                     </article>
                 </article>
-                <button type="button" className="p-1 bg-black rounded-full text-white absolute -top-2 -right-2" onClick={() => setSelectedHistory(null)}>
+                <button type="button" className="p-1 bg-black rounded-full text-white absolute -top-2 -right-2" onClick={() => setSelectedHistory(null)} >
                     <IconX stroke={1.5} width={20} height={20} />
                 </button>
             </article>
