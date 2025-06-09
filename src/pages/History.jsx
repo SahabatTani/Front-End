@@ -1,6 +1,7 @@
 import { IconTrash, IconX } from "@tabler/icons-react"
 import axios from "axios"
 import { useContext, useState } from "react"
+import { Link } from "react-router-dom"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
 import Loader from "../components/Loader"
@@ -116,6 +117,11 @@ function HistoryPopup({ history, setSelectedHistory }){
                         <article className="mt-2">
                             <p className="font-bold">Solusi</p>
                             <p className="text-justify">{history.prediction.solution}</p>
+                        </article>
+                        <article className="mt-2">
+                            <p className="font-bold">Rekomendasi obat</p>
+                            <img src={history.prediction.medicine_image_url} alt="Obat" className="w-1/2 my-2" />
+                            <Link to={history.prediction.shop_url} className="underline">Link pembelian obat</Link>
                         </article>    
                         </>}
                         <article className="mt-2">

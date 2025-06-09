@@ -55,7 +55,7 @@ function ForumContainer({ onOpenModal }){
                         <p>Buat diskusi baru</p>
                     </button>}
                     {isLogin === false &&
-                    <div className="p-2 border border-[#ccc] rounded-full">Silahkan masuk untuk membuat diskusi baru</div>}
+                    <Link to={"/login"} className="p-2 border border-[#ccc] rounded-full">Silahkan masuk untuk membuat diskusi baru</Link>}
                     {filteredThreads?.length > 0 &&
                     <section className="flex flex-col border border-[#ccc] rounded-lg">
                     {filteredThreads.map((thread, index) => (

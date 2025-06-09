@@ -1,6 +1,7 @@
 import { IconArrowNarrowRight, IconCircleCheck, IconClipboard, IconObjectScan, IconPhoto, IconPhotoUp } from "@tabler/icons-react";
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import cassava from "../assets/cassava.png";
 import corn from "../assets/corn.png";
 import mango from "../assets/mango.png";
@@ -13,6 +14,8 @@ import { AuthContext } from "../contexts/AuthContext";
 import { LoaderContext } from "../contexts/LoaderContext";
 
 export default function Detect(){
+    document.title = "SahabatTani | Deteksi"
+    
     return (
         <>
         <Navbar />
@@ -201,6 +204,11 @@ function DetectContainer(){
                     <article>
                         <p className="font-bold">Solusi</p>
                         <p className="text-justify">{result.prediction.solution}</p>
+                    </article>
+                    <article>
+                        <p className="font-bold">Rekomendasi obat</p>
+                        <img src={result.prediction.medicine_image_url} alt="Obat" className="w-1/2 my-2" />
+                        <Link to={result.prediction.shop_url} className="underline">Link pembelian obat</Link>
                     </article>
                 </article>}
             </section>}

@@ -13,6 +13,8 @@ import Navbar from "../components/Navbar"
 import { HistoryMapContext } from "../contexts/HistoryMapContext"
 
 export default function Home(){
+    document.title = "SahabatTani"
+    
     return (
         <>
         <Navbar />

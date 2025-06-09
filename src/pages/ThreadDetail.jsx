@@ -1,7 +1,7 @@
 import { IconDotsVertical, IconPhotoUp, IconTrash, IconX } from "@tabler/icons-react";
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -14,6 +14,7 @@ import { DateParser } from "../utils/DateParser";
 
 export default function ThreadDetail(){
     document.title = "SahabatTani | Forum diskusi"
+
     return (
         <>
         <Navbar />
@@ -215,6 +216,7 @@ function CommentForm({thread, setThread, setThreads }){
     const commentContentRef = useRef()
     const [image, setImage] = useState(null)
     const [imagePreview, setImagePreview] = useState(null)
+    const { isLogin } = useContext(AuthContext)
 
     const [isLoading, setIsLoading] = useState(false)
     const { setLoaderElementWidth, setLoaderElementHeight } = useContext(LoaderContext)
@@ -286,6 +288,9 @@ function CommentForm({thread, setThread, setThreads }){
 
     return (
         <form className="create-comment flex flex-col rounded-lg bg-white shadow-lg" onSubmit={postCommentHandler}>
+            {isLogin === false && <Link to={"/login"} className="font-bold p-2">Masuk untuk beri komentar</Link>}
+            {isLogin === true &&
+            <>
             <div className="font-bold p-2 border-b border-[#ccc]">Beri komentar</div>
             <textarea placeholder="Isi komentar" required rows={7} className="p-2 outline-none border-b border-[#ccc] resize-none" ref={commentContentRef}></textarea>
             <div className="flex flex-col gap-2 border-b border-[#ccc] p-2">
@@ -305,6 +310,7 @@ function CommentForm({thread, setThread, setThreads }){
             {isLoading ?
             <Loader className={"self-end my-2 mr-2 bg-custom-green"} /> :
             <button type="submit" className="py-2 px-6 my-2 mr-2 rounded-full bg-custom-green text-white self-end w-fit">Kirim</button>}
+            </>}
         </form>
     )
 }

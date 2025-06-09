@@ -1,9 +1,10 @@
 import { IconArrowLeft } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
-import logoGreen from "../assets/logo-green.png"
+import logoGreen from "../assets/logo-green.png";
 
 export default function NotFound(){
     document.title = "SahabatTani | Halaman tidak ditemukan"
+    
     return (
         <section className="flex flex-col gap-8 items-center justify-center h-screen w-screen">
             <article className="font-bold flex flex-col items-center">
