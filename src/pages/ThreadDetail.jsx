@@ -93,7 +93,6 @@ function ThreadContainer({ thread, setThread }){
 
     return (
         <section className="flex flex-col px-[10vw] mt-4 mx-auto gap-2 mobile:px-4 tablet:px-[5vw]">
-            {/* {thread === null && <Loader className={"self-center !w-8 !h-8 bg-custom-green"} />} */}
             <article className="account flex items-center gap-2">
                 <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${thread.fullname}`} alt="User" className="rounded-full w-8 h-8" />
                 <div className="flex flex-col w-full h-full">
@@ -108,7 +107,7 @@ function ThreadContainer({ thread, setThread }){
                     <div className={`menu absolute top-full right-0 py-1 bg-white shadow-lg rounded-lg ${showMenu ? "flex" : "hidden"} flex-col overflow-hidden`}>
                         <button type="button" className="flex items-center hover:bg-black/10 p-1 text-red-500" onClick={deleteDiscussionHandler}>
                             <IconTrash stroke={1.5} width={20} height={20} />
-                            <span className="">Hapus</span>
+                            <span>Hapus</span>
                         </button>
                     </div>
                 </div>}
@@ -126,7 +125,7 @@ function ThreadContainer({ thread, setThread }){
                     {thread.comments.length > 0 &&
                     <article className="comments">
                     {thread.comments.map((comment, index) => (
-                        <Comment key={index} comments={thread.comments} index={index} comment={comment} selectedCommentMenu={selectedCommentMenu} setSelectedCommentMenu={setSelectedCommentMenu} setPopupImageUrl={setPopupImageUrl} setThread={setThread} setThreads={setThreads} />
+                        <Comment key={index} comments={thread.comments} index={index} comment={comment} selectedCommentMenu={selectedCommentMenu} setSelectedCommentMenu={setSelectedCommentMenu} setPopupImageUrl={setPopupImageUrl} thread={thread} setThread={setThread} setThreads={setThreads} />
                     ))}
                     </article>}
                 </article>
@@ -140,7 +139,7 @@ function ThreadContainer({ thread, setThread }){
     )
 }
 
-function Comment({ comments, index, comment, selectedCommentMenu, setSelectedCommentMenu, setPopupImageUrl, setThread, setThreads }) {
+function Comment({ comments, index, comment, selectedCommentMenu, setSelectedCommentMenu, setPopupImageUrl, thread, setThread, setThreads }) {
     const menuRef = useRef(null)
     const { user } = useContext(AuthContext)
 
@@ -172,9 +171,11 @@ function Comment({ comments, index, comment, selectedCommentMenu, setSelectedCom
             })
 
             setThread(thread => ({...thread, comments: thread.comments.filter(c => c.id !== comment.id)}))
-            setThreads(threads => threads.map(thread => {
-                if (thread.id === thread.id) return {...thread, total_comments: parseInt(thread.total_comments) - 1}
-                return thread
+            setThreads(threads => threads.map(t => {
+                if (t.id === thread.id){
+                    return {...t, total_comments: parseInt(t.total_comments) - 1}
+                }
+                return t
             }))
         } catch(error){
             console.log(error)
@@ -253,9 +254,9 @@ function CommentForm({thread, setThread, setThreads }){
             const btnElement = event.currentTarget.querySelector("button[type='submit']")
             setLoaderElementWidth(btnElement.clientWidth)
             setLoaderElementHeight(btnElement.clientHeight)
+            setIsLoading(true)
 
             const token = localStorage.getItem("token")
-            if (!token) return
 
             const requestBody = new FormData()
             requestBody.append("content", commentContentRef.current.value)
@@ -284,9 +285,11 @@ function CommentForm({thread, setThread, setThreads }){
                 created_at: new Date().toISOString()
             }
             setThread(thread => ({...thread, comments: [comment, ...thread.comments]}))
-            setThreads(threads => threads.map(thread => {
-                if (thread.id === thread.id) return {...thread, total_comments: parseInt(thread.total_comments) + 1}
-                return thread
+            setThreads(threads => threads.map(t => {
+                if (t.id === thread.id){
+                    return {...t, total_comments: parseInt(t.total_comments) + 1}
+                }
+                return t
             }))
 
             commentContentRef.current.value = ""
