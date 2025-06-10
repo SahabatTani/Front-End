@@ -11,6 +11,7 @@ import aboutImage from "../assets/about-image.jpg"
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 import { HistoryMapContext } from "../contexts/HistoryMapContext"
+import GoTop from "../utils/GoTop"
 
 export default function Home(){
     document.title = "SahabatTani"
@@ -36,7 +37,7 @@ function Hero(){
                     <p className="font-bold mobile:text-center">dapatkan solusi terbaik</p>
                     <p className="font-bold mobile:text-center">dalam hitungan detik</p>
                 </div>
-                <Link to={"/detect"} className="py-2 px-6 rounded-full bg-white w-fit">Coba sekarang</Link>
+                <Link to={"/detect"} className="py-2 px-6 rounded-full bg-white w-fit" onClick={GoTop}>Coba sekarang</Link>
             </div>
         </section>
     )

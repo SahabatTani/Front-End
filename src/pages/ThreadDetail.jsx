@@ -11,6 +11,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { LoaderContext } from "../contexts/LoaderContext";
 import { ThreadContext } from "../contexts/ThreadContext";
 import { DateParser } from "../utils/DateParser";
+import GoTop from "../utils/GoTop";
 import NotFound from "./NotFound";
 
 export default function ThreadDetail(){
@@ -306,7 +307,7 @@ function CommentForm({thread, setThread, setThreads }){
 
     return (
         <form className="create-comment flex flex-col rounded-lg bg-white shadow-lg" onSubmit={postCommentHandler}>
-            {isLogin === false && <Link to={"/login"} className="font-bold p-2">Masuk untuk beri komentar</Link>}
+            {isLogin === false && <Link to={"/login"} className="font-bold p-2" onClick={GoTop}>Masuk untuk beri komentar</Link>}
             {isLogin === true &&
             <>
             <div className="font-bold p-2 border-b border-[#ccc]">Beri komentar</div>

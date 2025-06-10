@@ -220,7 +220,7 @@ function DetectContainer(){
                     <article>
                         <p className="font-bold">Rekomendasi obat</p>
                         <img src={result.prediction.medicine_image_url} alt="Obat" className="w-1/2 my-2" />
-                        <Link to={result.prediction.shop_url} className="underline">Link pembelian obat</Link>
+                        <Link to={result.prediction.shop_url} className="underline" target="_blank">Link pembelian obat</Link>
                     </article>
                 </article>}
             </section>}

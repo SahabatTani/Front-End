@@ -6,6 +6,7 @@ import logoGreen from "../assets/logo-green.png"
 import Loader from "../components/Loader"
 import { AuthContext } from "../contexts/AuthContext"
 import { LoaderContext } from "../contexts/LoaderContext"
+import GoTop from "../utils/GoTop"
 
 export default function Register(){
     document.title = "SahabatTani | Daftar"
@@ -89,7 +90,7 @@ export default function Register(){
                         <label htmlFor="password-confirmation">Konfirmasi password</label>
                         <input type="password" id="password-confirmation" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={passwordConfirmationRef} />
                     </div>
-                    <span>Sudah punya akun? <Link to={"/login"} className="hover:underline">Masuk</Link></span>
+                    <span>Sudah punya akun? <Link to={"/login"} className="hover:underline" onClick={GoTop}>Masuk</Link></span>
                     {isLoading ?
                     <Loader className={"bg-custom-green"} /> :
                     <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white">Daftar</button>}

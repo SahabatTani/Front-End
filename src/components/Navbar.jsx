@@ -3,6 +3,7 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import logoGreen from "../assets/logo-green.png"
 import { AuthContext } from "../contexts/AuthContext"
+import GoTop from "../utils/GoTop"
 
 export default function Navbar(){
     const { isLogin, user, setUser, setIsLogin } = useContext(AuthContext)
@@ -59,7 +60,7 @@ export default function Navbar(){
 
     return (
         <nav className="bg-white px-[10vw] py-4 flex items-center justify-between border border-b border-[#ccc] fixed top-0 left-0 w-full z-[1200] mobile:px-4 tablet:px-[5vw]">
-            <Link to={"/"} className="logo flex items-center gap-2">
+            <Link to={"/"} className="logo flex items-center gap-2" onClick={GoTop}>
                 <img src={logoGreen} alt="SahabatTani" className="w-12 h-12" />
                 <span className="font-bold text-xl mobile:text-base">SahabatTani</span>
             </Link>
@@ -72,13 +73,13 @@ export default function Navbar(){
                     links.map((link, index) => (
                         link.path.includes("#") ?
                         <a href={link.path} key={index} className="hover:underline">{link.label}</a> :
-                        <Link to={link.path} key={index} className="hover:underline">{link.label}</Link>
+                        <Link to={link.path} key={index} className="hover:underline" onClick={GoTop}>{link.label}</Link>
                     ))
                 }
                 </div>
             {
                 isLogin === false &&
-                <Link to={"/login"} className="py-2 px-6 rounded-full bg-custom-green text-white">Masuk</Link>
+                <Link to={"/login"} className="py-2 px-6 rounded-full bg-custom-green text-white" onClick={GoTop}>Masuk</Link>
             }
             {
                 isLogin === true &&
@@ -88,7 +89,7 @@ export default function Navbar(){
                         <IconChevronDown stroke={1.5} width={16} height={16} />
                     </button>
                     <div className={`menu absolute top-[105%] right-0 flex-col bg-white shadow-lg rounded-lg py-1 ${showAccountMenu ? "flex" : "hidden"}`}>
-                        <Link to={"/history"} className="p-2 pr-8 hover:bg-[#ccc] flex items-center gap-2">
+                        <Link to={"/history"} className="p-2 pr-8 hover:bg-[#ccc] flex items-center gap-2" onClick={GoTop}>
                             <IconHistory stroke={1.5} />
                             <span>Riwayat</span>
                         </Link>

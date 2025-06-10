@@ -6,6 +6,7 @@ import logoGreen from "../assets/logo-green.png"
 import Loader from "../components/Loader"
 import { AuthContext } from "../contexts/AuthContext"
 import { LoaderContext } from "../contexts/LoaderContext"
+import GoTop from "../utils/GoTop"
 
 export default function Login(){
     document.title = "SahabatTani | Masuk"
@@ -66,7 +67,7 @@ export default function Login(){
                         <label htmlFor="password">Password</label>
                         <input type="password" id="password" required className="outline-none border border-[#ccc] rounded-sm p-2" ref={passwordRef} />
                     </div>
-                    <span>Belum punya akun? <Link to={"/register"} className="hover:underline">Daftar</Link></span>
+                    <span>Belum punya akun? <Link to={"/register"} className="hover:underline" onClick={GoTop}>Daftar</Link></span>
                     {isLoading ? 
                     <Loader className={"bg-custom-green"} /> :
                     <button type="submit" className="py-2 px-6 rounded-full bg-custom-green text-white cursor-pointer">Masuk</button>}

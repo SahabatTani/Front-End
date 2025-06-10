@@ -11,6 +11,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { LoaderContext } from "../contexts/LoaderContext";
 import { ThreadContext } from "../contexts/ThreadContext";
 import { DateParser } from "../utils/DateParser";
+import GoTop from "../utils/GoTop";
 
 export default function Forum(){
     document.title = "SahabatTani | Forum diskusi"
@@ -56,11 +57,11 @@ function ForumContainer({ onOpenModal }){
                         <p>Buat diskusi baru</p>
                     </button>}
                     {isLogin === false &&
-                    <Link to={"/login"} className="p-2 border border-[#ccc] rounded-full bg-white">Silahkan masuk untuk membuat diskusi baru</Link>}
+                    <Link to={"/login"} className="p-2 border border-[#ccc] rounded-full bg-white" onClick={GoTop}>Silahkan masuk untuk membuat diskusi baru</Link>}
                     {filteredThreads?.length > 0 &&
                     <section className="flex flex-col border border-[#ccc] rounded-lg bg-white">
                     {filteredThreads.map((thread, index) => (
-                        <Link to={`/forum/${thread.id}`} className={`flex flex-col gap-2 p-2 ${index < filteredThreads.length - 1 ? "border-b border-[#ccc]" : ""}`} key={index}>
+                        <Link to={`/forum/${thread.id}`} className={`flex flex-col gap-2 p-2 ${index < filteredThreads.length - 1 ? "border-b border-[#ccc]" : ""}`} key={index} onClick={GoTop}>
                             <article className="flex items-center gap-2">
                                 <img src={`${import.meta.env.VITE_USER_AVATAR}&name=${thread.fullname}`} className="rounded-full w-6 h-6" />
                                 <article className="flex flex-col w-full">
