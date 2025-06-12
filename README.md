@@ -13,6 +13,7 @@ Layanan antarmuka untuk aplikasi Sahabat Tani yang menyediakan berbagai fitur se
 - Vite.js
 - React.js
 - Tailwindcss
+- Leaflet
 - Netlify (Deployment)
 
 ---
