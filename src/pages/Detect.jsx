@@ -1,4 +1,4 @@
-import { IconArrowNarrowDown, IconArrowNarrowRight, IconCircleCheck, IconClipboard, IconObjectScan, IconPhoto, IconPhotoUp } from "@tabler/icons-react";
+import { IconArrowNarrowDown, IconArrowNarrowRight, IconCircleCheck, IconClipboard, IconMapPin, IconObjectScan, IconPhoto, IconPhotoUp } from "@tabler/icons-react";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
@@ -29,6 +29,7 @@ export default function Detect(){
 }
 
 function DetectSteps(){
+    const { isLogin } = useContext(AuthContext)
     const steps = [
         {
             svg: <IconPhoto stroke={1.5} />,
@@ -44,8 +45,15 @@ function DetectSteps(){
         }
     ]
 
+    if (isLogin === true){
+        steps.splice(2, 0, {
+            svg: <IconMapPin stroke={1.5} />,
+            label: "Berikan izin akses lokasi"
+        })
+    }
+
     return (
-        <section className="flex flex-col gap-8 items-center mt-4 mx-auto px-[10vw]">
+        <section className="flex flex-col gap-8 items-center mt-4 mx-auto px-[10vw] tablet:px-[5vw]">
             <div className="font-bold text-xl">Langkah penggunaan</div>
             <section className="flex items-center gap-4 justify-center mobile:flex-col">
             {steps.map((step, index) => (
@@ -161,7 +169,11 @@ function DetectContainer(){
         } catch(error){
             setIsLoading(false)
             console.log(error)
-            toast.error("Gagal melakukan prediksi")
+            if (error instanceof GeolocationPositionError){
+                toast.warn("Silahkan berikan izin akses lokasi")
+            } else {
+                toast.error("Gagal melakukan prediksi")
+            }
         }
     }
 
